@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sentence Builder</title>
+
+  <style>
+    body{
+      font-family: system-ui;
+      background:#fafafa;
+      padding:18px;
+    }
+
+    .card{
+      background:#fff;
+      border:1px solid #e8e8e8;
+      border-radius:14px;
+      padding:16px;
+      margin-bottom:16px;
+    }
+
+    .tile{
+      border:1px solid #ddd;
+      border-radius:999px;
+      padding:10px 14px;
+      margin:6px;
+      display:inline-block;
+      cursor:pointer;
+      background:white;
+    }
+
+    .target{
+      min-height:60px;
+      border:2px dashed #ddd;
+      border-radius:14px;
+      padding:12px;
+      margin-bottom:10px;
+    }
+
+    button{
+      padding:10px 14px;
+      border-radius:12px;
+      border:1px solid #ddd;
+      margin:6px 6px 0 0;
+      background:white;
+    }
+
+    .status{
+      background:#f3f3f3;
+      padding:10px;
+      border-radius:12px;
+      margin-top:10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>Sentence Builder</h2>
+
+<div class="card">
+  <b>English sentence:</b>
+  <div id="goal"></div>
+</div>
+
+<div class="card">
+  <b>Your sentence:</b>
+  <div id="built" class="target"></div>
+
+  <button onclick="check()">Check</button>
+  <button onclick="hint()">Hint</button>
+  <button onclick="clearBuilt()">Clear</button>
+  <button onclick="nextSentence()">Next</button>
+
+  <div id="status" class="status">Tap tiles to start</div>
+</div>
+
+<div class="card">
+  <b>Tiles:</b>
+  <div id="bank"></div>
+</div>
+
+<script>
+const SENTENCES = [
+  {
+    english: "I went to pick up my mom from work.",
+    tokens: ["회사에","엄마를","데리러","갔어요"]
+  },
+  {
+    english: "I need to organize my thoughts.",
+    tokens: ["생각을","정리해야","돼요"]
+  },
+  {
+    english: "The road is slippery.",
+    tokens: ["길이","미끄러워요"]
+  },
+  {
+    english: "I’m trying to find ways not to use my phone.",
+    tokens: ["핸드폰을","사용하지","않는","방법을","찾으려고","해요"]
+  }
+];
+
+let index = 0;
+let bank = [];
+let built = [];
+
+function shuffle(arr){
+  return arr.sort(()=>Math.random()-0.5);
+}
+
+function loadSentence(){
+  document.getElementById("goal").innerText = SENTENCES[index].english;
+  bank = shuffle([...SENTENCES[index].tokens]);
+  built = [];
+  render();
+}
+
+function render(){
+  const bankDiv = document.getElementById("bank");
+  const builtDiv = document.getElementById("built");
+  bankDiv.innerHTML="";
+  builtDiv.innerHTML="";
+
+  bank.forEach(word=>{
+    const el=document.createElement("span");
+    el.className="tile";
+    el.innerText=word;
+    el.onclick=()=>moveToBuilt(word);
+    bankDiv.appendChild(el);
+  });
+
+  built.forEach(word=>{
+    const el=document.createElement("span");
+    el.className="tile";
+    el.innerText=word;
+    el.onclick=()=>moveToBank(word);
+    builtDiv.appendChild(el);
+  });
+}
+
+function moveToBuilt(word){
+  bank = bank.filter(w=>w!==word);
+  built.push(word);
+  render();
+}
+
+function moveToBank(word){
+  built = built.filter(w=>w!==word);
+  bank.push(word);
+  render();
+}
+
+function check(){
+  const correct = SENTENCES[index].tokens.join(" ");
+  const user = built.join(" ");
+  if(correct===user){
+    document.getElementById("status").innerText="Correct 🎉";
+  } else {
+    document.getElementById("status").innerText="Try again!";
+  }
+}
+
+function hint(){
+  const nextWord = SENTENCES[index].tokens[built.length];
+  document.getElementById("status").innerText="Next word: "+nextWord;
+}
+
+function clearBuilt(){
+  bank = bank.concat(built);
+  built = [];
+  render();
+}
+
+function nextSentence(){
+  index=(index+1)%SENTENCES.length;
+  loadSentence();
+}
+
+loadSentence();
+</script>
+
+</body>
+</html>
