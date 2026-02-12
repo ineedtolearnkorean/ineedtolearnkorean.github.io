@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Korean Speed Typing</title>
+
+<style>
+body{font-family:system-ui;background:#fafafa;padding:18px;margin:0;}
+.card{background:#fff;border:1px solid #e8e8e8;border-radius:14px;padding:16px;margin:12px 0;}
+.big{font-size:26px;font-weight:700;margin:8px 0;}
+input{width:100%;font-size:22px;padding:14px;border-radius:12px;border:1px solid #ddd;}
+button{padding:10px 14px;border-radius:12px;border:1px solid #ddd;background:#fff;margin-top:8px;}
+.status{background:#f3f3f3;padding:10px;border-radius:12px;margin-top:10px;}
+.barWrap{height:12px;background:#eee;border-radius:999px;margin-top:10px;}
+.bar{height:12px;background:#111;width:100%;}
+</style>
+</head>
+
+<body>
+
+<h2>Korean Speed Typing</h2>
+
+<div class="card">
+<b>English:</b>
+<div class="big" id="english">Press Start</div>
+
+<input id="answer" placeholder="Type Korean here…" disabled>
+<button onclick="startGame()">Start</button>
+
+<div class="barWrap"><div id="bar" class="bar"></div></div>
+<div id="time">Time: 10</div>
+
+<div id="status" class="status">Press Start</div>
+</div>
+
+<script>
+const WORDS = [
+  {eng:"habit", kor:"습관"},
+  {eng:"passion", kor:"열정"},
+  {eng:"to be certain", kor:"확실하다"},
+  {eng:"to organize", kor:"정리하다"},
+  {eng:"self development", kor:"자기계발"},
+  {eng:"stress", kor:"스트레스"},
+  {eng:"to register", kor:"등록하다"},
+  {eng:"productive", kor:"생산적이다"}
+];
+
+let current;
+let timer;
+let timeLeft=10;
+
+function nextWord(){
+  current = WORDS[Math.floor(Math.random()*WORDS.length)];
+  document.getElementById("english").innerText=current.eng;
+  document.getElementById("answer").value="";
+}
+
+function startGame(){
+  document.getElementById("answer").disabled=false;
+  nextWord();
+  startTimer();
+}
+
+function startTimer(){
+  clearInterval(timer);
+  timeLeft=10;
+  timer=setInterval(()=>{
+    timeLeft-=0.1;
+    document.getElementById("time").innerText="Time: "+timeLeft.toFixed(1);
+    document.getElementById("bar").style.width=(timeLeft/10*100)+"%";
+    if(timeLeft<=0){ nextWord(); startTimer(); }
+  },100);
+}
+
+document.getElementById("answer").addEventListener("keydown",e=>{
+  if(e.key==="Enter"){
+    if(e.target.value.trim()===current.kor){
+      document.getElementById("status").innerText="Correct 🎉";
+    } else {
+      document.getElementById("status").innerText="Wrong ❌ Answer: "+current.kor;
+    }
+    nextWord();
+    startTimer();
+  }
+});
+</script>
+
+</body>
+</html>
