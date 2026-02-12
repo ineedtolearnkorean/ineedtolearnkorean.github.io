@@ -1,0 +1,308 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Study World</title>
+  <style>
+    body{margin:0;background:#f7f7fb;font-family:system-ui;}
+    .top{
+      position:sticky;top:0;background:#ffffffcc;backdrop-filter: blur(8px);
+      border-bottom:1px solid #e8e8e8;padding:12px 14px;display:flex;gap:10px;flex-wrap:wrap;
+      align-items:center;justify-content:space-between;
+    }
+    .stats{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+    .pill{padding:8px 10px;border:1px solid #e6e6e6;border-radius:999px;background:#fff;font-size:13px;}
+    .wrap{padding:14px;max-width:900px;margin:0 auto;}
+    canvas{width:100%;height:auto;border-radius:16px;border:1px solid #e8e8e8;background:#fff;}
+    .card{background:#fff;border:1px solid #e8e8e8;border-radius:16px;padding:14px;margin-top:12px;}
+    button{border:1px solid #ddd;background:#fff;border-radius:12px;padding:10px 12px;font-size:14px;}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+    .small{font-size:12px;color:#666;line-height:1.35}
+    a{color:#111}
+  </style>
+</head>
+<body>
+
+<div class="top">
+  <div><b>Study World</b> <span class="small">tap objects in the room</span></div>
+  <div class="stats">
+    <div class="pill">Level: <b id="lvl">1</b></div>
+    <div class="pill">XP: <b id="xp">0</b>/<span id="xpNext">100</span></div>
+    <div class="pill">Coins: <b id="coins">0</b></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <canvas id="c" width="900" height="520"></canvas>
+
+  <div class="card">
+    <div class="row">
+      <button id="claimBtn">Claim daily reward</button>
+      <button id="resetBtn">Reset progress</button>
+    </div>
+    <p class="small" id="msg">Tip: Each object opens a game. After you finish a round, come back and click “+XP” on the pop-up.</p>
+    <p class="small">
+      Links this world expects:
+      <br>• <code>../sentence-builder/</code>
+      <br>• <code>../listening-quiz/</code>
+      <br>• <code>../speed-typing/</code>
+    </p>
+  </div>
+</div>
+
+<script>
+/** ---------- Save data ---------- **/
+const KEY = "study_world_v1";
+const todayKey = () => new Date().toISOString().slice(0,10);
+
+const state = load() || { level: 1, xp: 0, coins: 0, dailyClaim: "" };
+
+function load(){ try { return JSON.parse(localStorage.getItem(KEY)); } catch { return null; } }
+function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+
+function xpNeeded(level){ return 80 + (level-1)*30; } // gentle scaling
+function addRewards(xpGain, coinGain){
+  state.xp += xpGain;
+  state.coins += coinGain;
+
+  // level up
+  while(state.xp >= xpNeeded(state.level)){
+    state.xp -= xpNeeded(state.level);
+    state.level += 1;
+    toast(`Level up! Now level ${state.level}.`);
+  }
+
+  save();
+  renderHUD();
+}
+
+function renderHUD(){
+  document.getElementById("lvl").textContent = state.level;
+  document.getElementById("xp").textContent = state.xp;
+  document.getElementById("xpNext").textContent = xpNeeded(state.level);
+  document.getElementById("coins").textContent = state.coins;
+}
+renderHUD();
+
+/** ---------- Canvas room ---------- **/
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
+
+function draw(){
+  // background
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // wall
+  ctx.fillStyle = "#fdf6ff";
+  ctx.fillRect(0,0,900,340);
+
+  // floor
+  ctx.fillStyle = "#ffeecf";
+  ctx.fillRect(0,340,900,180);
+
+  // window
+  roundRect(60,60,180,120,18,"#cfe9ff","#9cc9ff");
+  ctx.fillStyle="#bfe1ff";
+  ctx.fillRect(75,75,70,45);
+  ctx.fillRect(150,75,70,45);
+  ctx.fillRect(75,125,70,45);
+  ctx.fillRect(150,125,70,45);
+
+  // rug
+  roundRect(260,380,380,100,30,"#ffd7e5","#f1a3bf");
+  ctx.fillStyle="#fff";
+  ctx.globalAlpha=0.35;
+  ctx.beginPath(); ctx.ellipse(450,430,160,40,0,0,Math.PI*2); ctx.fill();
+  ctx.globalAlpha=1;
+
+  // bookshelf (Typing)
+  obj.bookshelf.draw();
+
+  // desk (Sentence Builder)
+  obj.desk.draw();
+
+  // headphones stand (Listening)
+  obj.headphones.draw();
+
+  // avatar (simple chibi blob)
+  drawAvatar();
+
+  // labels
+  drawLabel(obj.desk, "Desk");
+  drawLabel(obj.headphones, "Headphones");
+  drawLabel(obj.bookshelf, "Keyboard");
+}
+function roundRect(x,y,w,h,r,fill,stroke){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+  ctx.fillStyle=fill; ctx.fill();
+  ctx.strokeStyle=stroke; ctx.lineWidth=3; ctx.stroke();
+}
+function drawLabel(o, text){
+  ctx.font="600 14px system-ui";
+  ctx.fillStyle="#111";
+  ctx.fillText(text, o.x, o.y-10);
+}
+function drawAvatar(){
+  const x=700,y=365;
+  // shadow
+  ctx.globalAlpha=0.18;
+  ctx.fillStyle="#000";
+  ctx.beginPath(); ctx.ellipse(x+60,y+110,55,14,0,0,Math.PI*2); ctx.fill();
+  ctx.globalAlpha=1;
+
+  // body
+  roundRect(x, y+30, 120, 110, 40, "#ffffff", "#e6e6e6");
+  // face
+  ctx.fillStyle="#111";
+  ctx.beginPath(); ctx.arc(x+45,y+70,4,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x+80,y+70,4,0,Math.PI*2); ctx.fill();
+  // smile
+  ctx.strokeStyle="#111"; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.arc(x+62,y+84,16,0.2*Math.PI,0.8*Math.PI); ctx.stroke();
+
+  // little book
+  roundRect(x+88,y+92,26,18,6,"#d9f6ff","#89d3e6");
+}
+draw();
+
+/** ---------- Clickable objects ---------- **/
+const obj = {
+  desk: {
+    x: 300, y: 240, w: 280, h: 150,
+    draw(){
+      // tabletop
+      roundRect(this.x,this.y+40,this.w,40,18,"#ffe1b5","#f2b66f");
+      // legs
+      roundRect(this.x+30,this.y+80,36,95,14,"#ffd29a","#f2b66f");
+      roundRect(this.x+this.w-66,this.y+80,36,95,14,"#ffd29a","#f2b66f");
+      // laptop
+      roundRect(this.x+110,this.y+10,70,50,12,"#eaeaea","#cfcfcf");
+      roundRect(this.x+105,this.y+55,80,14,10,"#d7d7d7","#cfcfcf");
+      // sticky note
+      roundRect(this.x+210,this.y+20,38,30,8,"#fff3a8","#e5d46c");
+    },
+    action(){
+      popup(
+        "Desk: Sentence Builder",
+        "Build sentences with tiles. Earn XP when you finish a round.",
+        "../sentence-builder/",
+        18, 6
+      );
+    }
+  },
+  headphones: {
+    x: 120, y: 240, w: 150, h: 160,
+    draw(){
+      // stand
+      roundRect(this.x+60,this.y+70,30,110,14,"#ffffff","#e6e6e6");
+      // base
+      roundRect(this.x+30,this.y+170,90,20,12,"#ffffff","#e6e6e6");
+      // headband
+      ctx.strokeStyle="#111"; ctx.lineWidth=8;
+      ctx.beginPath(); ctx.arc(this.x+75,this.y+70,45,Math.PI,0); ctx.stroke();
+      // earcups
+      roundRect(this.x+25,this.y+70,30,55,12,"#111","#111");
+      roundRect(this.x+95,this.y+70,30,55,12,"#111","#111");
+    },
+    action(){
+      popup(
+        "Headphones: Listening Quiz",
+        "Press Play and choose the meaning. Earn XP for correct answers.",
+        "../listening-quiz/",
+        16, 7
+      );
+    }
+  },
+  bookshelf: {
+    x: 610, y: 180, w: 220, h: 210,
+    draw(){
+      roundRect(this.x,this.y,this.w,this.h,18,"#e8fff0","#8de0b0");
+      // shelves
+      ctx.fillStyle="#8de0b0";
+      ctx.fillRect(this.x+14,this.y+70,this.w-28,10);
+      ctx.fillRect(this.x+14,this.y+130,this.w-28,10);
+      // books
+      book(this.x+25,this.y+20,18,42,"#ffb3c7");
+      book(this.x+47,this.y+20,18,42,"#b3d9ff");
+      book(this.x+69,this.y+20,18,42,"#fff3a8");
+      book(this.x+25,this.y+80,22,46,"#c7b3ff");
+      book(this.x+50,this.y+80,22,46,"#ffd29a");
+      book(this.x+75,this.y+80,22,46,"#b3ffd6");
+      // keyboard doodle
+      roundRect(this.x+125,this.y+145,78,30,10,"#ffffff","#e6e6e6");
+      ctx.fillStyle="#cfcfcf";
+      for(let i=0;i<6;i++) ctx.fillRect(this.x+132+i*12,this.y+152,8,6);
+    },
+    action(){
+      popup(
+        "Keyboard: Speed Typing",
+        "Type Korean fast. Earn XP for streaks.",
+        "../speed-typing/",
+        14, 6
+      );
+    }
+  }
+};
+function book(x,y,w,h,color){
+  roundRect(x,y,w,h,8,color,"#ffffff");
+}
+
+canvas.addEventListener("click",(e)=>{
+  const r = canvas.getBoundingClientRect();
+  const x = (e.clientX - r.left) * (canvas.width / r.width);
+  const y = (e.clientY - r.top) * (canvas.height / r.height);
+
+  for(const k of Object.keys(obj)){
+    const o = obj[k];
+    if(x>=o.x && x<=o.x+o.w && y>=o.y && y<=o.y+o.h){
+      o.action();
+      return;
+    }
+  }
+});
+
+/** ---------- Popups + rewards ---------- **/
+function toast(text){
+  const m = document.getElementById("msg");
+  m.textContent = text;
+}
+
+function popup(title, desc, url, xpGain, coinGain){
+  const ok = confirm(`${title}\n\n${desc}\n\nOpen game now?`);
+  if(ok){
+    // open game in same tab
+    location.href = url;
+  } else {
+    // allow manual reward when user finishes later
+    const doReward = confirm(`When you finish a round, come back and claim rewards.\n\nClaim now anyway?`);
+    if(doReward) addRewards(xpGain, coinGain);
+  }
+}
+
+document.getElementById("claimBtn").onclick = ()=>{
+  if(state.dailyClaim === todayKey()){
+    toast("Daily reward already claimed today.");
+    return;
+  }
+  state.dailyClaim = todayKey();
+  save();
+  addRewards(20, 15);
+  toast("Daily reward claimed: +20 XP, +15 coins.");
+};
+
+document.getElementById("resetBtn").onclick = ()=>{
+  const ok = confirm("Reset your Study World progress?");
+  if(!ok) return;
+  localStorage.removeItem(KEY);
+  location.reload();
+};
+</script>
+</body>
+</html>
