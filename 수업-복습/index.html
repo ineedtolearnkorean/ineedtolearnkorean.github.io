@@ -6,28 +6,29 @@
   <title>수업 복습</title>
   <style>
     :root{
-     :root{
-  --bg:#f7f7fb;
-  --card:#ffffff;
-  --card2:#f1f2f7;
-  --text:#1f2937;
-  --muted:#6b7280;
-  --line:#e5e7eb;
-  --accent:#7c3aed;
-  --good:#16a34a;
-  --bad:#dc2626;
-  --warn:#d97706;
-}
-
+      --bg:#f7f7fb;
+      --card:#ffffff;
+      --card2:#f1f2f7;
+      --text:#111827;
+      --muted:#4b5563;
+      --line:#e5e7eb;
+      --accent:#7c3aed;
+      --accentSoft:rgba(124,58,237,0.12);
+      --good:#16a34a;
+      --bad:#dc2626;
+      --warn:#d97706;
+    }
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      background:#f7f7fb;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
+      background:var(--bg);
       color:var(--text);
+      line-height:1.65;
+      font-size:16px;
     }
     header{
-      padding:18px 16px 10px;
+      padding:18px 16px 12px;
       border-bottom:1px solid var(--line);
       position:sticky;
       top:0;
@@ -35,12 +36,12 @@
       backdrop-filter: blur(10px);
       z-index:10;
     }
-    header h1{margin:0;font-size:18px;letter-spacing:.2px}
+    header h1{margin:0;font-size:22px;letter-spacing:.2px}
     header .sub{
-      margin-top:6px;
+      margin-top:8px;
       color:var(--muted);
-      font-size:13px;
-      line-height:1.35;
+      font-size:14px;
+      line-height:1.45;
       display:flex;
       flex-wrap:wrap;
       gap:10px;
@@ -48,19 +49,20 @@
     }
     .badge{
       display:inline-block;
-      padding:4px 8px;
+      padding:5px 10px;
       border-radius:999px;
       border:1px solid var(--line);
-      background:rgba(255,255,255,.02);
+      background:rgba(255,255,255,.7);
       font-size:12px;
       color:var(--muted);
+      white-space:nowrap;
     }
-    .wrap{max-width:980px;margin:0 auto;padding:14px 12px 50px;}
+    .wrap{max-width:980px;margin:0 auto;padding:14px 12px 60px;}
     .tabs{
       display:flex;
       gap:8px;
       flex-wrap:wrap;
-      margin:10px 0 14px;
+      margin:12px 0 14px;
     }
     .tabBtn{
       border:1px solid var(--line);
@@ -71,11 +73,14 @@
       cursor:pointer;
       font-size:13px;
       user-select:none;
+      font-weight:650;
     }
     .tabBtn.active{
-      border-color:rgba(139,92,246,.6);
-      box-shadow:0 0 0 3px rgba(139,92,246,.15);
+      border-color:rgba(124,58,237,.55);
+      box-shadow:0 0 0 4px rgba(124,58,237,.13);
+      background:#fff;
     }
+
     .card{
       background:var(--card);
       border:1px solid var(--line);
@@ -86,117 +91,155 @@
     @media (min-width:900px){
       .grid.two{grid-template-columns:1.2fr .8fr;}
     }
-    .sectionTitle{font-size:16px;margin:0 0 6px}
-    .muted{color:var(--muted);font-size:13px;line-height:1.45}
+
+    .sectionTitle{
+      font-size:22px;
+      margin:0 0 6px;
+      color:var(--text);
+    }
+    .muted{color:var(--muted);font-size:15px}
+    .en{display:block;color:var(--muted);font-size:13px;margin-top:2px}
     hr{border:none;border-top:1px solid var(--line);margin:14px 0}
     .pill{
       display:flex;
       gap:10px;
       align-items:flex-start;
       border:1px solid var(--line);
-      background:rgba(139,92,246,.10);
-      padding:10px 12px;
+      background:var(--accentSoft);
+      padding:12px 14px;
       border-radius:14px;
       margin:10px 0 0;
-      font-size:13px;
-      line-height:1.4;
+      font-size:14px;
+      line-height:1.45;
     }
-    .pill strong{color:#e9ddff}
+    .pill strong{color:#3b2a86}
     .list{display:flex;flex-direction:column;gap:10px}
     .item{
       border:1px solid var(--line);
       border-radius:14px;
       padding:12px;
-      background:rgba(255,255,255,.02);
+      background:rgba(255,255,255,.65);
     }
-    .item h4{margin:0 0 6px;font-size:14px;font-weight:650}
-    .item p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.45}
-    .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .item h4{
+      margin:0 0 8px;
+      font-size:20px;
+      font-weight:750;
+      color:var(--text);
+    }
+    .item p{margin:6px 0 0;color:var(--muted);font-size:15px;line-height:1.5}
+    .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
     .btn{
       border:1px solid var(--line);
       background:var(--card2);
       color:var(--text);
-      padding:9px 10px;
+      padding:10px 12px;
       border-radius:12px;
       cursor:pointer;
       font-size:13px;
       user-select:none;
+      font-weight:650;
     }
-    .btn.small{padding:7px 9px;font-size:12px;border-radius:10px}
+    .btn.small{padding:8px 10px;font-size:12px;border-radius:10px}
     .btn.primary{
-      border-color:rgba(34,197,94,.55);
-      box-shadow:0 0 0 3px rgba(34,197,94,.12);
+      border-color:rgba(22,163,74,.40);
+      box-shadow:0 0 0 3px rgba(22,163,74,.10);
+      background:#f3faf6;
+    }
+    .btn.accent{
+      border-color:rgba(124,58,237,.35);
+      box-shadow:0 0 0 3px rgba(124,58,237,.10);
+      background:#faf7ff;
     }
     .btn.danger{
-      border-color:rgba(239,68,68,.55);
-      box-shadow:0 0 0 3px rgba(239,68,68,.10);
+      border-color:rgba(220,38,38,.40);
+      box-shadow:0 0 0 3px rgba(220,38,38,.08);
+      background:#fff5f5;
     }
-    .btn.ghost{
-      background:transparent;
-    }
+    .btn:active{transform:translateY(1px)}
     details summary{
       cursor:pointer;
-      color:#e9ddff;
-      font-size:13px;
+      color:#3b2a86;
+      font-size:14px;
       list-style:none;
       user-select:none;
+      font-weight:700;
     }
     details summary::-webkit-details-marker{display:none}
     details .answer{
-      margin-top:8px;
-      padding:10px;
-      border-radius:12px;
-      background:rgba(139,92,246,.10);
-      border:1px solid rgba(139,92,246,.22);
-      font-size:13px;
-      line-height:1.45;
+      margin-top:10px;
+      padding:12px 14px;
+      border-radius:14px;
+      background:var(--accentSoft);
+      border:1px solid rgba(124,58,237,.18);
+      font-size:15px;
+      line-height:1.55;
+      color:var(--text);
     }
+
     textarea,input[type="text"]{
       width:100%;
-      padding:12px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      color:var(--text);
-      font-size:14px;
+      padding:16px;
+      border-radius:16px;
+      border:2px solid #c7d2fe;
+      background:#ffffff;
+      color:#111827;
+      font-size:16px;
       outline:none;
+      box-shadow:0 4px 14px rgba(0,0,0,0.06);
     }
-    textarea{min-height:96px;resize:vertical}
-    .statusLine{
-      margin-top:10px;
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.45;
+    textarea{min-height:140px;resize:vertical}
+    textarea:focus,input[type="text"]:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 4px rgba(124,58,237,0.15);
     }
-    .ok{color:#bbf7d0}
-    .bad{color:#fecaca}
-    .warn{color:#fde68a}
-    .kbd{
-      font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size:12px;
-      padding:2px 6px;
-      border:1px solid var(--line);
-      border-radius:8px;
-      background:rgba(255,255,255,.03);
-      color:var(--muted);
-    }
+
+    .statusLine{margin-top:10px;font-size:14px;color:var(--muted);line-height:1.5}
+    .ok{color:var(--good);font-weight:750}
+    .bad{color:var(--bad);font-weight:750}
+    .warn{color:var(--warn);font-weight:750}
     .tiny{font-size:12px;color:var(--muted)}
-    .sectionDesc{margin:0 0 8px;color:var(--muted);font-size:13px}
-    .split{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
+    .kbd{
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+      font-size:12px;padding:2px 7px;border:1px solid var(--line);
+      border-radius:9px;background:#fff;color:var(--muted);
     }
+    .split{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
     .select{
       border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
+      background:#fff;
       color:var(--text);
       padding:10px 12px;
       border-radius:12px;
       font-size:13px;
       outline:none;
+      font-weight:650;
+    }
+    .progressRow{
+      display:flex;gap:10px;flex-wrap:wrap;margin-top:10px
+    }
+    .progressBox{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:14px;
+      padding:10px 12px;
+      font-size:13px;
+      color:var(--muted);
+    }
+    .chip{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-size:13px;
+      cursor:pointer;
+      user-select:none;
+      font-weight:650;
+    }
+    .chip.active{
+      border-color:rgba(124,58,237,.55);
+      box-shadow:0 0 0 3px rgba(124,58,237,.12);
+      background:#faf7ff;
     }
   </style>
 </head>
@@ -207,7 +250,7 @@
   <div class="sub">
     <span class="badge" id="badgeLesson">Lesson: 2.4 & 2.11</span>
     <span class="badge" id="badgeGrammar">Target: ~다 보면</span>
-    <span class="badge">Flow: 워밍업 → 번역 → 문장 → SRS</span>
+    <span class="badge">Flow: 워밍업 → 번역 → 문장 → 읽기/게임 → SRS</span>
   </div>
 </header>
 
@@ -216,6 +259,8 @@
     <button class="tabBtn active" data-tab="warmup">단어 워밍업</button>
     <button class="tabBtn" data-tab="translate">번역 연습</button>
     <button class="tabBtn" data-tab="builder">문장 만들기</button>
+    <button class="tabBtn" data-tab="reading">읽기 + 질문</button>
+    <button class="tabBtn" data-tab="games">게임</button>
     <button class="tabBtn" data-tab="srs">틀린 것 복습 (SRS)</button>
     <button class="tabBtn" data-tab="settings">옵션</button>
   </div>
@@ -227,17 +272,19 @@
         <div class="split">
           <div>
             <h3 class="sectionTitle">🧠 단어 워밍업</h3>
-            <p class="sectionDesc">먼저 단어 “얼굴 익히기” + 가벼운 선택 문제</p>
+            <p class="muted">먼저 단어 “얼굴 익히기” + 가벼운 선택 문제<span class="en">Warm up with recognition before producing sentences.</span></p>
           </div>
           <div class="tiny">
-            단축키: <span class="kbd">1</span> 워밍업 / <span class="kbd">2</span> 번역 / <span class="kbd">3</span> 문장 / <span class="kbd">4</span> SRS
+            단축키: <span class="kbd">1</span> 워밍업 / <span class="kbd">2</span> 번역 / <span class="kbd">3</span> 문장 /
+            <span class="kbd">4</span> 읽기 / <span class="kbd">5</span> 게임 / <span class="kbd">6</span> SRS / <span class="kbd">7</span> 옵션
           </div>
         </div>
 
         <div class="pill">
           <div>
             <strong>Tip</strong><br>
-            여기서는 “완벽 암기” 금지. 그냥 <b>인지</b>만 하고 다음 탭으로 가면 됨.
+            여기서는 “완벽 암기” 금지. 그냥 인지만 하고 다음 탭으로 가면 돼요.<br>
+            <span class="en">No perfection here—just recognize, then move on.</span>
           </div>
         </div>
 
@@ -248,13 +295,15 @@
 
       <div class="card">
         <h3 class="sectionTitle">📌 오늘의 단어</h3>
-        <p class="muted">Lesson Word Bank + Knowt Review (섞어서 보여줘요)</p>
+        <p class="muted">Lesson Word Bank + Knowt Review (섞어서 보여줘요)<span class="en">Lesson bank + Knowt review mixed together.</span></p>
         <hr>
         <div id="vocabPreview" class="muted"></div>
         <div class="row">
           <button class="btn small" id="shuffleVocab">단어 섞기</button>
           <button class="btn small" id="copyVocab">단어 복사</button>
+          <button class="btn small accent" id="pick3Words">오늘 3단어 뽑기</button>
         </div>
+        <div class="statusLine" id="pickedWordsLine"></div>
       </div>
     </div>
   </section>
@@ -262,17 +311,19 @@
   <!-- TAB: Translation Practice -->
   <section id="tab-translate" class="tab" style="display:none;">
     <div class="card">
+
       <div class="split">
         <div>
           <h3 class="sectionTitle">🌉 번역 연습</h3>
-          <p class="sectionDesc">영어 → 한국어. 목표 문법 <b id="grammarInline">~다 보면</b>은 꼭 포함.</p>
+          <p class="muted">영어 → 한국어. 목표 문법 <b id="grammarInline">~다 보면</b>은 꼭 포함.<span class="en">English → Korean. Include the target grammar.</span></p>
         </div>
-        <div>
+        <div class="row" style="margin:0">
           <select id="filterLevel" class="select" aria-label="filter">
             <option value="ALL">전체</option>
             <option value="Warm-up">Warm-up</option>
             <option value="Core">Core</option>
             <option value="Challenge">Challenge</option>
+            <option value="Generated">Generated</option>
           </select>
         </div>
       </div>
@@ -280,7 +331,38 @@
       <div class="pill">
         <div>
           <strong>Meaning</strong><br>
-          If you keep doing X, Y naturally happens.
+          계속 X를 하다 보면 자연스럽게 Y가 생겨요/달라져요.<br>
+          <span class="en">If you keep doing X, Y naturally happens.</span>
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- NEW: Generator -->
+      <div class="item">
+        <h4>✨ 자동 생성 번역 연습</h4>
+        <p class="muted">버튼을 누르면 새 문장이 생성돼요 (단어뱅크 힌트 포함).<span class="en">Generate a new prompt with word-bank hints.</span></p>
+
+        <div class="row">
+          <button class="btn primary" id="genTranslation">New sentence</button>
+          <button class="btn accent" id="genHint">Hint</button>
+          <button class="btn" id="revealModel">Show model answer</button>
+          <button class="btn danger" id="saveGenWrong">틀림으로 저장(SRS)</button>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="badge" id="genMeta">—</div>
+          <p style="margin:10px 0 6px"><b>English:</b> <span id="genEN">버튼을 눌러 시작!</span></p>
+          <p style="margin:0 0 10px"><b>Word bank hints:</b> <span id="genHints">—</span></p>
+
+          <textarea id="genUserKO" placeholder="여기에 한국어 번역을 입력하세요. / Type your Korean translation here."></textarea>
+
+          <details id="modelWrap" style="margin-top:10px">
+            <summary>Model answer</summary>
+            <div class="answer" id="genModelKO">—</div>
+          </details>
+
+          <div class="statusLine" id="genFeedback"></div>
         </div>
       </div>
 
@@ -295,31 +377,36 @@
   <section id="tab-builder" class="tab" style="display:none;">
     <div class="card">
       <h3 class="sectionTitle">✍️ 문장 만들기</h3>
-      <p class="sectionDesc">
+      <p class="muted">
         목표: <b id="grammarInline2">~다 보면</b> + 단어 <b>3개 이상</b> 포함해서 내 문장 만들기.
-        (워밍업/번역을 하고 오면 훨씬 쉬움)
+        <span class="en">Goal: include target grammar + 3+ words from today's bank.</span>
       </p>
 
       <hr>
 
       <div class="item">
         <h4>템플릿</h4>
-        <p class="muted">X하다 보면 Y(이/가) 달라져요 / 생겨요 / 좋아져요 / 늘어요</p>
+        <p class="muted">X하다 보면 Y(이/가) 달라져요 / 생겨요 / 좋아져요 / 늘어요<span class="en">Template: If you keep doing X, Y changes/appears/improves.</span></p>
         <div class="row">
           <button class="btn small" id="insertTemplate">템플릿 넣기</button>
           <button class="btn small" id="insertIdea">랜덤 아이디어</button>
+          <button class="btn small accent" id="usePickedWords">뽑은 3단어로 힌트</button>
         </div>
         <p class="tiny" id="ideaLine"></p>
       </div>
 
       <div class="item">
-        <h4>내 문장</h4>
-        <textarea id="userSentence" placeholder="여기에 문장을 써보세요."></textarea>
+        <h4>✏️ 여기에서 문장 입력</h4>
+        <p class="muted">~다 보면 + 단어 3개 이상 사용<span class="en">Type your sentence here.</span></p>
+
+        <textarea id="userSentence" placeholder="예: 핸드폰 사용을 줄이다 보면 여유 시간이 생겨요."></textarea>
+
         <div class="row">
           <button class="btn primary" id="checkSentence">Check</button>
           <button class="btn danger" id="markSentenceWrong">틀림으로 저장(SRS)</button>
           <button class="btn" id="clearSentence">지우기</button>
         </div>
+
         <div class="statusLine" id="sentenceFeedback"></div>
       </div>
 
@@ -329,8 +416,137 @@
           • 문법 포함: <b>~다 보면</b><br>
           • 단어 3개 이상 포함(오늘 단어 목록 기준)<br>
           • 틀림 저장하면 SRS 탭에서 반복
+          <span class="en">Auto-check: grammar + 3+ vocab hits; save mistakes to SRS.</span>
         </p>
       </div>
+    </div>
+  </section>
+
+  <!-- TAB: Reading + Questions -->
+  <section id="tab-reading" class="tab" style="display:none;">
+    <div class="card">
+      <div class="split">
+        <div>
+          <h3 class="sectionTitle">📖 읽기 + 질문</h3>
+          <p class="muted">짧은 이야기 읽고 질문에 답해요 (단어/문법 자연스럽게 노출).<span class="en">Read a short story and answer questions.</span></p>
+        </div>
+        <div class="row" style="margin:0">
+          <button class="btn accent" id="newStory">새 이야기</button>
+          <button class="btn" id="toggleGloss">단어 힌트 토글</button>
+          <button class="btn danger" id="saveReadingWrong">틀림으로 저장(SRS)</button>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="item">
+        <h4 id="storyTitle">오늘의 이야기</h4>
+        <p class="muted" id="storyKorean"></p>
+        <p class="muted en" id="storyEnglish"></p>
+
+        <details id="glossWrap" style="margin-top:10px">
+          <summary>단어 힌트 / Vocab hints</summary>
+          <div class="answer" id="storyGloss">—</div>
+        </details>
+      </div>
+
+      <div class="item">
+        <h4>질문 / Questions</h4>
+        <div id="readingQs"></div>
+
+        <div class="row">
+          <button class="btn primary" id="checkReading">Check answers</button>
+        </div>
+        <div class="statusLine" id="readingFeedback"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB: Games -->
+  <section id="tab-games" class="tab" style="display:none;">
+    <div class="card">
+      <div class="split">
+        <div>
+          <h3 class="sectionTitle">🎮 게임</h3>
+          <p class="muted">두뇌에 “재미 버튼” 눌러서 암기 더 잘 되게 🙂<span class="en">Fun mini-games for memory and retrieval.</span></p>
+        </div>
+        <div class="row" style="margin:0">
+          <span class="chip active" data-game="rapid">빠른 뜻 맞히기</span>
+          <span class="chip" data-game="cloze">빈칸 채우기</span>
+          <span class="chip" data-game="memory">메모리(플립)</span>
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- Game: Rapid -->
+      <div id="game-rapid" class="gamePane">
+        <div class="item">
+          <h4>⚡ 빠른 뜻 맞히기</h4>
+          <p class="muted">단어를 보고 뜻을 고르기 (빠르게).<span class="en">Pick the correct meaning quickly.</span></p>
+
+          <div class="pill">
+            <div>
+              <strong id="rapidWord">—</strong><br>
+              <span class="en" id="rapidWordHint">—</span>
+            </div>
+          </div>
+
+          <div class="row" id="rapidChoices"></div>
+
+          <div class="row">
+            <button class="btn primary" id="rapidNew">Next</button>
+            <button class="btn danger" id="rapidSaveWrong">틀림으로 저장(SRS)</button>
+          </div>
+
+          <div class="statusLine" id="rapidFeedback"></div>
+          <div class="progressRow">
+            <div class="progressBox">Correct: <b id="rapidCorrect">0</b></div>
+            <div class="progressBox">Wrong: <b id="rapidWrong">0</b></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Game: Cloze -->
+      <div id="game-cloze" class="gamePane" style="display:none;">
+        <div class="item">
+          <h4>🧩 빈칸 채우기</h4>
+          <p class="muted">문장 속 빈칸에 알맞은 단어를 넣기.<span class="en">Fill the blank with the correct word.</span></p>
+
+          <div class="pill">
+            <div>
+              <strong id="clozeSentence">—</strong>
+              <span class="en" id="clozeSentenceEN">—</span>
+            </div>
+          </div>
+
+          <div class="row" id="clozeChoices"></div>
+
+          <div class="row">
+            <button class="btn primary" id="clozeNew">Next</button>
+            <button class="btn danger" id="clozeSaveWrong">틀림으로 저장(SRS)</button>
+          </div>
+
+          <div class="statusLine" id="clozeFeedback"></div>
+        </div>
+      </div>
+
+      <!-- Game: Memory -->
+      <div id="game-memory" class="gamePane" style="display:none;">
+        <div class="item">
+          <h4>🧠 메모리(플립)</h4>
+          <p class="muted">같은 쌍(한국어-영어)을 찾기. 8쌍 랜덤.<span class="en">Flip cards and match Korean-English pairs.</span></p>
+
+          <div class="row">
+            <button class="btn primary" id="memoryNew">New board</button>
+            <button class="btn danger" id="memorySaveWrong">많이 틀렸으면 SRS 저장</button>
+          </div>
+
+          <div class="statusLine" id="memoryStats"></div>
+          <div id="memoryBoard" style="margin-top:12px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;"></div>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -340,7 +556,7 @@
       <div class="split">
         <div>
           <h3 class="sectionTitle">🔁 틀린 것 복습 (SRS)</h3>
-          <p class="sectionDesc">틀린 항목만 모아서 반복 (브라우저에 저장됨)</p>
+          <p class="muted">틀린 항목만 모아서 반복 (브라우저에 저장됨).<span class="en">Review only what you missed (saved locally).</span></p>
         </div>
         <div class="row" style="margin:0;">
           <button class="btn" id="refreshSrs">새로고침</button>
@@ -351,21 +567,21 @@
       <hr>
 
       <div class="list" id="srsList"></div>
-      <p class="muted" id="srsEmpty" style="display:none;">아직 저장된 항목이 없어요.</p>
+      <p class="muted" id="srsEmpty" style="display:none;">아직 저장된 항목이 없어요.<span class="en">No saved items yet.</span></p>
     </div>
   </section>
 
-  <!-- TAB: Settings / Options -->
+  <!-- TAB: Settings -->
   <section id="tab-settings" class="tab" style="display:none;">
     <div class="card">
       <h3 class="sectionTitle">⚙️ 옵션</h3>
-      <p class="sectionDesc">스크린샷에서 말한 “옵션 업데이트” 반영용. 여기서 설정 바꾸면 화면에 바로 적용돼요.</p>
+      <p class="muted">레슨 라벨/문법 타겟/정답 표시 등을 바꿔요.<span class="en">Edit lesson label, grammar target, and display options.</span></p>
 
       <hr>
 
       <div class="item">
         <h4>레슨 라벨</h4>
-        <p class="muted">홈/상단 배지에 표시되는 레슨 이름</p>
+        <p class="muted">홈/상단 배지에 표시되는 레슨 이름<span class="en">The label shown at the top.</span></p>
         <input id="lessonLabelInput" type="text" value="Lesson: 2.4 & 2.11" />
         <div class="row">
           <button class="btn primary" id="saveLessonLabel">저장</button>
@@ -375,18 +591,18 @@
 
       <div class="item">
         <h4>목표 문법</h4>
-        <p class="muted">상단 배지 + 번역/문장 탭 규칙에 적용</p>
+        <p class="muted">상단 배지 + 체크 규칙에 적용<span class="en">Used in checks and hints.</span></p>
         <input id="grammarInput" type="text" value="~다 보면" />
         <div class="row">
           <button class="btn primary" id="saveGrammar">저장</button>
           <button class="btn" id="resetGrammar">기본값</button>
         </div>
-        <p class="tiny">예: ~더니 / ~(으)ㄹ 때 / ~게 되다 / ~(으)려다(가) 등으로 바꿔도 됨</p>
+        <p class="tiny">예: ~더니 / ~(으)ㄹ 때 / ~게 되다 / ~(으)려다(가) 등<span class="en">Example: swap to other grammar patterns.</span></p>
       </div>
 
       <div class="item">
-        <h4>번역 연습 표시 옵션</h4>
-        <p class="muted">정답을 기본으로 숨길지(토글로 보기)</p>
+        <h4>정답 표시 옵션</h4>
+        <p class="muted">번역 정답을 한 번에 접거나 펼치기<span class="en">Collapse/expand all translation answers.</span></p>
         <div class="row">
           <button class="btn" id="collapseAllAnswers">정답 전부 접기</button>
           <button class="btn" id="expandAllAnswers">정답 전부 펼치기</button>
@@ -395,7 +611,7 @@
 
       <div class="item">
         <h4>데이터 초기화</h4>
-        <p class="muted">SRS/옵션 저장값을 리셋</p>
+        <p class="muted">SRS/옵션 저장값을 리셋<span class="en">Reset saved SRS and settings.</span></p>
         <div class="row">
           <button class="btn danger" id="resetAll">전부 초기화</button>
         </div>
@@ -410,8 +626,9 @@
    * CONFIG + STORAGE
    *********************************************************/
   const STORAGE = {
-    SRS_KEY: "korean_srs_items_v2",
-    CFG_KEY: "korean_cfg_v2"
+    SRS_KEY: "korean_srs_items_v3",
+    CFG_KEY: "korean_cfg_v3",
+    PICKED_KEY: "korean_picked_words_v1"
   };
 
   const DEFAULT_CFG = {
@@ -432,13 +649,10 @@
   function saveCfg(cfg){
     localStorage.setItem(STORAGE.CFG_KEY, JSON.stringify(cfg));
   }
-
   let CFG = loadCfg();
 
   /*********************************************************
    * DATA (EDIT THIS SECTION ANYTIME)
-   * - Add your Knowt words here as you want.
-   * - You can expand to all 47/54/etc.
    *********************************************************/
   const lessonWordBank = [
     ["실천하다", "to put into practice"],
@@ -452,7 +666,7 @@
     ["뿐이다", "only / nothing but"]
   ];
 
-  // Sample Knowt review words (add the rest of your set here)
+  // Add the rest of your Knowt words here whenever you want.
   const knowtReview = [
     ["아이러니하게도", "ironically"],
     ["생산적이다", "productive"],
@@ -463,12 +677,13 @@
     ["평생", "lifetime"],
     ["관점", "perspective"],
     ["기회", "opportunity"],
-    ["알아차리다", "to realize"],
+    ["알아차리다", "to realize / notice"],
     ["생각을 정리하다", "to organize thoughts"],
     ["신경을 쓰다", "to worry about"],
     ["등록하다", "to register"],
     ["복잡하다", "to be complicated"],
-    ["소비하다", "to consume"]
+    ["소비하다", "to consume"],
+    ["여유", "leisure / slack time"]
   ];
 
   // Warm-up multiple choice (recognition)
@@ -493,10 +708,8 @@
     }
   ];
 
-  // Translation items (Bridge Practice)
-  // NOTE: These are written for "~다 보면" but will still display if you change grammar in options.
+  // Translation items (fixed set)
   const translationItems = [
-    // Warm-up
     { level:"Warm-up", en:"If you keep organizing your thoughts, stress decreases.",
       ko:"생각을 정리하다 보면 스트레스가 줄어들어요." },
     { level:"Warm-up", en:"If you keep working productively, you get rewarded.",
@@ -506,7 +719,6 @@
     { level:"Warm-up", en:"If you keep analyzing situations, your perspective changes.",
       ko:"상황을 계속 분석하다 보면 관점이 달라져요." },
 
-    // Core
     { level:"Core", en:"If you keep following your passion, your life changes.",
       ko:"열정을 따라가다 보면 삶이 달라져요." },
     { level:"Core", en:"If you keep worrying about small things, life becomes complicated.",
@@ -516,7 +728,6 @@
     { level:"Core", en:"If you keep trying, you eventually find a method that suits you.",
       ko:"계속 시도하다 보면 나에게 어울리는 방법을 찾게 돼요." },
 
-    // Challenge
     { level:"Challenge", en:"If you keep working toward your goal, success becomes certain.",
       ko:"목표를 향해 계속 노력하다 보면 성공은 확실해져요." },
     { level:"Challenge", en:"If you keep practicing good habits, efficiency improves.",
@@ -525,6 +736,15 @@
       ko:"스트레스를 관리하다 보면 생각이 달라져요." },
     { level:"Challenge", en:"If you keep reducing phone use, you gain more free time.",
       ko:"핸드폰 사용을 줄이다 보면 여유 시간이 생겨요." }
+  ];
+
+  // Sentence idea prompts
+  const ideaPrompts = [
+    "자기계발 + 습관 + 목표로 문장 만들기",
+    "생각 정리 + 스트레스 + 상태로 문장 만들기",
+    "열정 + 기회 + 관점으로 문장 만들기",
+    "신경 쓰다 + 복잡하다 + 효율로 문장 만들기",
+    "분석하다 + 목표 + 확실하다로 문장 만들기"
   ];
 
   /*********************************************************
@@ -546,6 +766,11 @@
     }
     return a;
   }
+  function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+  function uniq(arr){
+    const seen = new Set();
+    return arr.filter(x => (seen.has(x) ? false : (seen.add(x), true)));
+  }
 
   /*********************************************************
    * TABS
@@ -555,6 +780,8 @@
     warmup: document.getElementById("tab-warmup"),
     translate: document.getElementById("tab-translate"),
     builder: document.getElementById("tab-builder"),
+    reading: document.getElementById("tab-reading"),
+    games: document.getElementById("tab-games"),
     srs: document.getElementById("tab-srs"),
     settings: document.getElementById("tab-settings")
   };
@@ -564,17 +791,18 @@
     Object.entries(tabMap).forEach(([k,el]) => el.style.display = (k===key ? "block" : "none"));
     if(key === "srs") renderSrs();
   }
-
   tabButtons.forEach(btn => btn.addEventListener("click", () => showTab(btn.dataset.tab)));
 
-  // Keyboard shortcuts 1-5
+  // Keyboard shortcuts 1-7
   window.addEventListener("keydown", (e)=>{
     if (["INPUT","TEXTAREA"].includes(document.activeElement?.tagName)) return;
     if(e.key === "1") showTab("warmup");
     if(e.key === "2") showTab("translate");
     if(e.key === "3") showTab("builder");
-    if(e.key === "4") showTab("srs");
-    if(e.key === "5") showTab("settings");
+    if(e.key === "4") showTab("reading");
+    if(e.key === "5") showTab("games");
+    if(e.key === "6") showTab("srs");
+    if(e.key === "7") showTab("settings");
   });
 
   /*********************************************************
@@ -593,11 +821,13 @@
   }
 
   /*********************************************************
-   * VOCAB PREVIEW
+   * VOCAB PREVIEW + PICK 3
    *********************************************************/
   const vocabPreviewEl = document.getElementById("vocabPreview");
   const shuffleVocabBtn = document.getElementById("shuffleVocab");
   const copyVocabBtn = document.getElementById("copyVocab");
+  const pick3WordsBtn = document.getElementById("pick3Words");
+  const pickedWordsLine = document.getElementById("pickedWordsLine");
 
   let vocabMixed = [];
   function rebuildVocabMixed(){
@@ -607,10 +837,27 @@
     const out = list.map(([k,e]) => `• <b>${escapeHtml(k)}</b> — ${escapeHtml(e)}`).join("<br>");
     vocabPreviewEl.innerHTML = out;
   }
+  function savePickedWords(words){
+    localStorage.setItem(STORAGE.PICKED_KEY, JSON.stringify(words));
+  }
+  function loadPickedWords(){
+    try{
+      return JSON.parse(localStorage.getItem(STORAGE.PICKED_KEY) || "[]");
+    }catch{
+      return [];
+    }
+  }
+  function showPickedWords(){
+    const w = loadPickedWords();
+    if(!w.length){
+      pickedWordsLine.innerHTML = `<span class="tiny">오늘 3단어를 뽑아보세요. / Pick 3 words for today's challenge.</span>`;
+      return;
+    }
+    pickedWordsLine.innerHTML = `<span class="ok">오늘의 3단어:</span> ${w.map(x=>`<span class="badge">${escapeHtml(x)}</span>`).join(" ")}`;
+  }
 
-  shuffleVocabBtn.addEventListener("click", ()=>{
-    renderVocabPreview(shuffle(vocabMixed));
-  });
+  shuffleVocabBtn.addEventListener("click", ()=> renderVocabPreview(shuffle(vocabMixed)));
+
   copyVocabBtn.addEventListener("click", async ()=>{
     const txt = vocabMixed.map(([k,e]) => `${k}\t${e}`).join("\n");
     try{
@@ -623,196 +870,16 @@
     }
   });
 
-  /*********************************************************
-   * WARM-UP RENDER
-   *********************************************************/
-  const warmupList = document.getElementById("warmupList");
-
-  function renderWarmup(){
-    warmupList.innerHTML = "";
-    warmupQs.forEach((qObj, idx) => {
-      const el = document.createElement("div");
-      el.className = "item";
-      el.innerHTML = `
-        <h4>Q${idx+1}. ${escapeHtml(qObj.q)}</h4>
-        <div class="row">
-          ${qObj.choices.map((c,i)=>`<button class="btn small" data-i="${i}">${escapeHtml(c)}</button>`).join("")}
-        </div>
-        <p class="muted" style="margin-top:8px;">
-          <span class="badge" id="warmupBadge${idx}">선택하세요</span>
-          <span style="margin-left:8px;">${escapeHtml(qObj.note || "")}</span>
-        </p>
-      `;
-      const badge = el.querySelector(`#warmupBadge${idx}`);
-      el.querySelectorAll("button[data-i]").forEach(b=>{
-        b.addEventListener("click", ()=>{
-          const pick = Number(b.dataset.i);
-          if (pick === qObj.a){
-            badge.textContent = "정답";
-            badge.className = "badge ok";
-          } else {
-            badge.textContent = "틀림 → SRS 저장";
-            badge.className = "badge bad";
-            addToSrs({
-              type:"warmup",
-              prompt:qObj.q,
-              user:qObj.choices[pick],
-              answer:qObj.choices[qObj.a],
-              meta:`Q${idx+1} / 워밍업`
-            });
-          }
-        });
-      });
-      warmupList.appendChild(el);
-    });
-  }
-
-  /*********************************************************
-   * TRANSLATION RENDER
-   *********************************************************/
-  const translationList = document.getElementById("translationList");
-  const translationCount = document.getElementById("translationCount");
-  const filterLevel = document.getElementById("filterLevel");
-
-  function renderTranslations(){
-    translationList.innerHTML = "";
-    const lvl = filterLevel.value;
-    const items = (lvl === "ALL") ? translationItems : translationItems.filter(x => x.level === lvl);
-
-    items.forEach((it, idx) => {
-      const el = document.createElement("div");
-      el.className = "item";
-      el.innerHTML = `
-        <h4>${idx+1}. <span class="badge">${escapeHtml(it.level)}</span> ${escapeHtml(it.en)}</h4>
-        <details class="ansDetails">
-          <summary>정답 보기</summary>
-          <div class="answer">${escapeHtml(it.ko)}</div>
-        </details>
-        <div class="row">
-          <button class="btn small danger" data-action="wrong">틀림으로 저장(SRS)</button>
-          <button class="btn small" data-action="copy">정답 복사</button>
-        </div>
-        <p class="muted">힌트: ${escapeHtml(CFG.grammarTarget)} 포함</p>
-      `;
-      el.querySelector('button[data-action="wrong"]').addEventListener("click", ()=>{
-        addToSrs({
-          type:"translation",
-          prompt: it.en,
-          answer: it.ko,
-          meta: `${it.level} / 번역 연습`
-        });
-        el.querySelector('button[data-action="wrong"]').textContent = "저장됨";
-      });
-      el.querySelector('button[data-action="copy"]').addEventListener("click", async ()=>{
-        try{
-          await navigator.clipboard.writeText(it.ko);
-          el.querySelector('button[data-action="copy"]').textContent = "복사됨";
-          setTimeout(()=>el.querySelector('button[data-action="copy"]').textContent="정답 복사", 900);
-        }catch{
-          el.querySelector('button[data-action="copy"]').textContent = "실패";
-          setTimeout(()=>el.querySelector('button[data-action="copy"]').textContent="정답 복사", 900);
-        }
-      });
-      translationList.appendChild(el);
-    });
-
-    translationCount.textContent = `표시 중: ${items.length}개`;
-  }
-
-  filterLevel.addEventListener("change", renderTranslations);
-
-  /*********************************************************
-   * SENTENCE BUILDER
-   *********************************************************/
-  const insertTemplateBtn = document.getElementById("insertTemplate");
-  const insertIdeaBtn = document.getElementById("insertIdea");
-  const userSentence = document.getElementById("userSentence");
-  const checkSentenceBtn = document.getElementById("checkSentence");
-  const markSentenceWrongBtn = document.getElementById("markSentenceWrong");
-  const clearSentenceBtn = document.getElementById("clearSentence");
-  const sentenceFeedback = document.getElementById("sentenceFeedback");
-  const ideaLine = document.getElementById("ideaLine");
-
-  // Simple idea prompts (uses your vocab themes)
-  const ideaPrompts = [
-    "자기계발 + 습관 + 목표로 문장 만들기",
-    "생각 정리 + 스트레스 + 상태로 문장 만들기",
-    "열정 + 기회 + 관점으로 문장 만들기",
-    "신경 쓰다 + 복잡하다 + 효율로 문장 만들기",
-    "분석하다 + 목표 + 확실하다로 문장 만들기"
-  ];
-
-  insertTemplateBtn.addEventListener("click", ()=>{
-    userSentence.value = `___하다 보면 ___(이/가) 달라져요. (${CFG.grammarTarget})`;
-    userSentence.focus();
-  });
-
-  insertIdeaBtn.addEventListener("click", ()=>{
-    const pick = ideaPrompts[Math.floor(Math.random()*ideaPrompts.length)];
-    ideaLine.textContent = `아이디어: ${pick}`;
-  });
-
-  clearSentenceBtn.addEventListener("click", ()=>{
-    userSentence.value = "";
-    sentenceFeedback.textContent = "";
-  });
-
-  // Count vocab hits from mixed list
-  function countVocabHits(sentence){
-    const uniq = new Set();
-    vocabMixed.forEach(([k])=>{
-      if(sentence.includes(k)) uniq.add(k);
-    });
-    return uniq.size;
-  }
-
-  function hasGrammar(sentence){
-    // Basic check: contains "다 보면" OR exact grammar target string (when user changes it)
-    const g = CFG.grammarTarget.trim();
-    if(!g) return false;
-    if(sentence.includes("다 보면") || sentence.includes("다보면")) return true;
-    return sentence.includes(g);
-  }
-
-  checkSentenceBtn.addEventListener("click", ()=>{
-    const s = userSentence.value.trim();
-    if(!s){
-      sentenceFeedback.innerHTML = `<span class="warn">문장을 먼저 써줘!</span>`;
-      return;
-    }
-    const gOk = hasGrammar(s);
-    const hits = countVocabHits(s);
-
-    const parts = [];
-    parts.push(gOk ? `<span class="ok">문법 OK</span>` : `<span class="bad">문법 없음 (${escapeHtml(CFG.grammarTarget)})</span>`);
-    parts.push(hits >= 3 ? `<span class="ok">단어 포함 ${hits}개</span>` : `<span class="warn">단어 포함 ${hits}개 (3개 이상)</span>`);
-    sentenceFeedback.innerHTML = parts.join(" / ");
-  });
-
-  markSentenceWrongBtn.addEventListener("click", ()=>{
-    const s = userSentence.value.trim();
-    if(!s){
-      sentenceFeedback.innerHTML = `<span class="warn">저장할 문장이 없어.</span>`;
-      return;
-    }
-    addToSrs({
-      type:"sentence",
-      prompt:"내 문장 (문장 만들기)",
-      user:s,
-      answer:"(정답 없음: 다음에 내가 고쳐줄 항목)",
-      meta:"문장 만들기"
-    });
-    sentenceFeedback.innerHTML = `<span class="ok">SRS에 저장했어. ‘틀린 것 복습’ 탭에서 다시 보자.</span>`;
+  pick3WordsBtn.addEventListener("click", ()=>{
+    const candidates = vocabMixed.map(([k])=>k);
+    const pickSet = shuffle(candidates).slice(0,3);
+    savePickedWords(pickSet);
+    showPickedWords();
   });
 
   /*********************************************************
    * SRS (localStorage)
    *********************************************************/
-  const srsList = document.getElementById("srsList");
-  const srsEmpty = document.getElementById("srsEmpty");
-  const refreshSrsBtn = document.getElementById("refreshSrs");
-  const clearSrsBtn = document.getElementById("clearSrs");
-
   function loadSrs(){
     try{
       return JSON.parse(localStorage.getItem(STORAGE.SRS_KEY) || "[]");
@@ -836,6 +903,735 @@
     const items = loadSrs().filter(x=>x.id!==id);
     saveSrs(items);
   }
+
+  /*********************************************************
+   * WARM-UP RENDER
+   *********************************************************/
+  const warmupList = document.getElementById("warmupList");
+
+  function renderWarmup(){
+    warmupList.innerHTML = "";
+    warmupQs.forEach((qObj, idx) => {
+      const el = document.createElement("div");
+      el.className = "item";
+      el.innerHTML = `
+        <h4>Q${idx+1}. ${escapeHtml(qObj.q)}</h4>
+        <div class="row">
+          ${qObj.choices.map((c,i)=>`<button class="btn small" data-i="${i}">${escapeHtml(c)}</button>`).join("")}
+        </div>
+        <p class="muted" style="margin-top:8px;">
+          <span class="badge" id="warmupBadge${idx}">선택하세요 / Choose</span>
+          <span style="margin-left:8px;">${escapeHtml(qObj.note || "")}</span>
+        </p>
+      `;
+      const badge = el.querySelector(`#warmupBadge${idx}`);
+      el.querySelectorAll("button[data-i]").forEach(b=>{
+        b.addEventListener("click", ()=>{
+          const pickIdx = Number(b.dataset.i);
+          if (pickIdx === qObj.a){
+            badge.textContent = "정답 / Correct";
+            badge.className = "badge ok";
+          } else {
+            badge.textContent = "틀림 → SRS 저장 / Wrong → Saved";
+            badge.className = "badge bad";
+            addToSrs({
+              type:"warmup",
+              prompt:qObj.q,
+              user:qObj.choices[pickIdx],
+              answer:qObj.choices[qObj.a],
+              meta:`Q${idx+1} / 워밍업`
+            });
+          }
+        });
+      });
+      warmupList.appendChild(el);
+    });
+  }
+
+  /*********************************************************
+   * TRANSLATION RENDER (fixed list)
+   *********************************************************/
+  const translationList = document.getElementById("translationList");
+  const translationCount = document.getElementById("translationCount");
+  const filterLevel = document.getElementById("filterLevel");
+
+  function renderTranslations(){
+    translationList.innerHTML = "";
+
+    const lvl = filterLevel.value;
+    const base = translationItems.map(x => ({...x}));
+    const gen = generatedHistory.map(x => ({...x, level:"Generated"}));
+    const itemsAll = [...base, ...gen];
+
+    const items = (lvl === "ALL") ? itemsAll : itemsAll.filter(x => x.level === lvl);
+
+    items.forEach((it, idx) => {
+      const el = document.createElement("div");
+      el.className = "item";
+      el.innerHTML = `
+        <h4>${idx+1}. <span class="badge">${escapeHtml(it.level)}</span> ${escapeHtml(it.en)}</h4>
+        <details class="ansDetails">
+          <summary>정답 보기 / Show answer</summary>
+          <div class="answer">${escapeHtml(it.ko)}</div>
+        </details>
+        <div class="row">
+          <button class="btn small danger" data-action="wrong">틀림으로 저장(SRS)</button>
+          <button class="btn small" data-action="copy">정답 복사</button>
+        </div>
+        <p class="muted">힌트: ${escapeHtml(CFG.grammarTarget)} 포함<span class="en">Hint: include the target grammar.</span></p>
+      `;
+      el.querySelector('button[data-action="wrong"]').addEventListener("click", ()=>{
+        addToSrs({
+          type:"translation",
+          prompt: it.en,
+          answer: it.ko,
+          meta: `${it.level} / 번역 연습`
+        });
+        el.querySelector('button[data-action="wrong"]').textContent = "저장됨";
+      });
+      el.querySelector('button[data-action="copy"]').addEventListener("click", async ()=>{
+        try{
+          await navigator.clipboard.writeText(it.ko);
+          el.querySelector('button[data-action="copy"]').textContent = "복사됨";
+          setTimeout(()=>el.querySelector('button[data-action="copy"]').textContent="정답 복사", 900);
+        }catch{
+          el.querySelector('button[data-action="copy"]').textContent = "실패";
+          setTimeout(()=>el.querySelector('button[data-action="copy"]').textContent="정답 복사", 900);
+        }
+      });
+      translationList.appendChild(el);
+    });
+
+    translationCount.textContent = `표시 중: ${items.length}개 / Showing: ${items.length}`;
+  }
+  filterLevel.addEventListener("change", renderTranslations);
+
+  /*********************************************************
+   * TRANSLATION GENERATOR (new sentences with word bank)
+   *********************************************************/
+  const genTranslationBtn = document.getElementById("genTranslation");
+  const genHintBtn = document.getElementById("genHint");
+  const revealModelBtn = document.getElementById("revealModel");
+  const saveGenWrongBtn = document.getElementById("saveGenWrong");
+  const genMeta = document.getElementById("genMeta");
+  const genEN = document.getElementById("genEN");
+  const genHints = document.getElementById("genHints");
+  const genUserKO = document.getElementById("genUserKO");
+  const genModelKO = document.getElementById("genModelKO");
+  const modelWrap = document.getElementById("modelWrap");
+  const genFeedback = document.getElementById("genFeedback");
+
+  let generatedCurrent = null;
+  let generatedHistory = [];
+
+  // A few safe, reusable meaning templates
+  const genTemplates = [
+    {
+      // if you keep doing X, you naturally become/it becomes Y
+      build: (xVerbKo, xVerbEn, yKo, yEn) => ({
+        en: `If you keep ${xVerbEn}, ${yEn}.`,
+        ko: `${xVerbKo} ${CFG.grammarTarget} ${yKo}.`
+      })
+    }
+  ];
+
+  // Make sure Korean verb phrase ends nicely before CFG.grammarTarget
+  function joinKo(phrase){
+    // If phrase already ends with "다" (dictionary) or "하다", we can attach.
+    return phrase.trim();
+  }
+
+  // Pools (use vocab + some extra safe verbs)
+  const verbPool = [
+    { ko:"생각을 정리하다", en:"organizing your thoughts" },
+    { ko:"자기계발을 하다", en:"doing self-development" },
+    { ko:"습관을 유지하다", en:"maintaining a habit" },
+    { ko:"상황을 분석하다", en:"analyzing situations" },
+    { ko:"스트레스를 관리하다", en:"managing stress" },
+    { ko:"핸드폰 사용을 줄이다", en:"reducing phone use" },
+    { ko:"목표를 향해 노력하다", en:"working toward your goal" },
+    { ko:"생산적으로 일하다", en:"working productively" }
+  ];
+
+  const outcomePool = [
+    { ko:"여유 시간이 생겨요", en:"you gain more free time" },
+    { ko:"관점이 달라져요", en:"your perspective changes" },
+    { ko:"효율이 좋아져요", en:"your efficiency improves" },
+    { ko:"습관이 돼요", en:"it becomes a habit" },
+    { ko:"성공이 더 확실해져요", en:"success becomes more certain" },
+    { ko:"기회가 생겨요", en:"opportunities appear" },
+    { ko:"마음이 편해져요", en:"you feel more at ease" }
+  ];
+
+  function pickHintsFromWordBank(n=3){
+    const words = shuffle(vocabMixed.map(([k])=>k)).slice(0,n);
+    return words;
+  }
+
+  function generateTranslation(){
+    const x = pick(verbPool);
+    const y = pick(outcomePool);
+    const tpl = pick(genTemplates);
+
+    const built = tpl.build(joinKo(x.ko), x.en, y.ko, y.en);
+
+    const hints = pickHintsFromWordBank(3);
+    // ensure hints include something relevant sometimes
+    const forced = shuffle([pick(lessonWordBank)[0], pick(knowtReview)[0]]).slice(0,1);
+    const hintFinal = uniq([...forced, ...hints]).slice(0,4);
+
+    generatedCurrent = {
+      level:"Generated",
+      en: built.en,
+      ko: built.ko,
+      hints: hintFinal
+    };
+
+    genMeta.textContent = `Generated • Target: ${CFG.grammarTarget}`;
+    genEN.textContent = generatedCurrent.en;
+    genHints.innerHTML = hintFinal.map(w=>`<span class="badge">${escapeHtml(w)}</span>`).join(" ");
+    genUserKO.value = "";
+    genModelKO.textContent = built.ko;
+    genFeedback.textContent = "";
+    modelWrap.removeAttribute("open");
+  }
+
+  function checkGeneratedAttempt(){
+    if(!generatedCurrent) return;
+    const s = genUserKO.value.trim();
+    if(!s){
+      genFeedback.innerHTML = `<span class="warn">먼저 번역을 입력해요. / Type your translation first.</span>`;
+      return;
+    }
+    const hasG = hasGrammar(s);
+    const hits = countVocabHits(s);
+    const hintHits = generatedCurrent.hints.filter(w => s.includes(w)).length;
+
+    const parts = [];
+    parts.push(hasG ? `<span class="ok">문법 OK</span>` : `<span class="bad">문법 없음</span>`);
+    parts.push(hits >= 2 ? `<span class="ok">단어 포함 ${hits}개</span>` : `<span class="warn">단어 포함 ${hits}개</span>`);
+    parts.push(hintHits >= 1 ? `<span class="ok">힌트 단어 사용 ${hintHits}개</span>` : `<span class="warn">힌트 단어 0개</span>`);
+    genFeedback.innerHTML = parts.join(" / ");
+  }
+
+  genTranslationBtn.addEventListener("click", ()=>{
+    generateTranslation();
+    // also add it to history list so it can appear below if user wants
+    if(generatedCurrent){
+      generatedHistory.unshift({ level:"Generated", en: generatedCurrent.en, ko: generatedCurrent.ko });
+      generatedHistory = generatedHistory.slice(0,30);
+      renderTranslations();
+    }
+  });
+
+  genHintBtn.addEventListener("click", ()=>{
+    if(!generatedCurrent) generateTranslation();
+    genFeedback.innerHTML = `<span class="ok">힌트:</span> ${generatedCurrent.hints.map(w=>`<span class="badge">${escapeHtml(w)}</span>`).join(" ")} 
+      <span class="en">Try using at least one of these words.</span>`;
+  });
+
+  revealModelBtn.addEventListener("click", ()=>{
+    if(!generatedCurrent) generateTranslation();
+    modelWrap.setAttribute("open","");
+    checkGeneratedAttempt();
+  });
+
+  genUserKO.addEventListener("input", ()=>{
+    // light live check
+    if(genUserKO.value.trim().length > 8) checkGeneratedAttempt();
+  });
+
+  saveGenWrongBtn.addEventListener("click", ()=>{
+    if(!generatedCurrent){
+      genFeedback.innerHTML = `<span class="warn">먼저 문장을 생성해요. / Generate a sentence first.</span>`;
+      return;
+    }
+    addToSrs({
+      type:"gen-translation",
+      prompt: generatedCurrent.en,
+      user: genUserKO.value.trim() || "(no attempt)",
+      answer: generatedCurrent.ko,
+      meta:"Generated / 번역"
+    });
+    genFeedback.innerHTML = `<span class="ok">SRS 저장 완료. / Saved to SRS.</span>`;
+  });
+
+  /*********************************************************
+   * SENTENCE BUILDER
+   *********************************************************/
+  const insertTemplateBtn = document.getElementById("insertTemplate");
+  const insertIdeaBtn = document.getElementById("insertIdea");
+  const usePickedWordsBtn = document.getElementById("usePickedWords");
+  const userSentence = document.getElementById("userSentence");
+  const checkSentenceBtn = document.getElementById("checkSentence");
+  const markSentenceWrongBtn = document.getElementById("markSentenceWrong");
+  const clearSentenceBtn = document.getElementById("clearSentence");
+  const sentenceFeedback = document.getElementById("sentenceFeedback");
+  const ideaLine = document.getElementById("ideaLine");
+
+  function countVocabHits(sentence){
+    const uniqHits = new Set();
+    vocabMixed.forEach(([k])=>{ if(sentence.includes(k)) uniqHits.add(k); });
+    return uniqHits.size;
+  }
+
+  function hasGrammar(sentence){
+    const g = CFG.grammarTarget.trim();
+    if(!g) return false;
+    // Special: for ~다 보면 we accept spacing variations
+    if(g.includes("다 보면")){
+      if(sentence.includes("다 보면") || sentence.includes("다보면")) return true;
+    }
+    return sentence.includes(g);
+  }
+
+  insertTemplateBtn.addEventListener("click", ()=>{
+    userSentence.value = `___하다 보면 ___(이/가) 달라져요. (${CFG.grammarTarget})`;
+    userSentence.focus();
+  });
+
+  insertIdeaBtn.addEventListener("click", ()=>{
+    ideaLine.textContent = `아이디어: ${pick(ideaPrompts)}`;
+  });
+
+  usePickedWordsBtn.addEventListener("click", ()=>{
+    const w = loadPickedWords();
+    if(!w.length){
+      ideaLine.innerHTML = `<span class="warn">먼저 워밍업 탭에서 3단어를 뽑아줘! / Pick 3 words first.</span>`;
+      return;
+    }
+    ideaLine.innerHTML = `<span class="ok">이 단어로 문장 만들기:</span> ${w.map(x=>`<span class="badge">${escapeHtml(x)}</span>`).join(" ")}`;
+  });
+
+  clearSentenceBtn.addEventListener("click", ()=>{
+    userSentence.value = "";
+    sentenceFeedback.textContent = "";
+  });
+
+  checkSentenceBtn.addEventListener("click", ()=>{
+    const s = userSentence.value.trim();
+    if(!s){
+      sentenceFeedback.innerHTML = `<span class="warn">문장을 먼저 써줘! / Write a sentence first.</span>`;
+      return;
+    }
+    const gOk = hasGrammar(s);
+    const hits = countVocabHits(s);
+
+    const parts = [];
+    parts.push(gOk ? `<span class="ok">문법 OK</span>` : `<span class="bad">문법 없음 (${escapeHtml(CFG.grammarTarget)})</span>`);
+    parts.push(hits >= 3 ? `<span class="ok">단어 포함 ${hits}개</span>` : `<span class="warn">단어 포함 ${hits}개 (3개 이상)</span>`);
+    sentenceFeedback.innerHTML = parts.join(" / ");
+  });
+
+  markSentenceWrongBtn.addEventListener("click", ()=>{
+    const s = userSentence.value.trim();
+    if(!s){
+      sentenceFeedback.innerHTML = `<span class="warn">저장할 문장이 없어. / Nothing to save.</span>`;
+      return;
+    }
+    addToSrs({
+      type:"sentence",
+      prompt:"내 문장 (문장 만들기)",
+      user:s,
+      answer:"(정답 없음: 나중에 고쳐서 업그레이드)",
+      meta:"문장 만들기"
+    });
+    sentenceFeedback.innerHTML = `<span class="ok">SRS에 저장했어. / Saved to SRS.</span>`;
+  });
+
+  /*********************************************************
+   * READING + QUESTIONS
+   *********************************************************/
+  const newStoryBtn = document.getElementById("newStory");
+  const toggleGlossBtn = document.getElementById("toggleGloss");
+  const saveReadingWrongBtn = document.getElementById("saveReadingWrong");
+  const storyTitle = document.getElementById("storyTitle");
+  const storyKorean = document.getElementById("storyKorean");
+  const storyEnglish = document.getElementById("storyEnglish");
+  const storyGloss = document.getElementById("storyGloss");
+  const glossWrap = document.getElementById("glossWrap");
+  const readingQs = document.getElementById("readingQs");
+  const checkReadingBtn = document.getElementById("checkReading");
+  const readingFeedback = document.getElementById("readingFeedback");
+
+  const storyBank = [
+    {
+      title:"여유 시간을 만드는 습관",
+      ko:[
+        "요즘 미라는 핸드폰을 너무 많이 쓰는 것 같다고 느꼈어요.",
+        "그래서 하루에 10분씩만 사용 시간을 줄이기로 했어요.",
+        "처음에는 어렵더니, 줄이다 보면 점점 익숙해졌어요.",
+        "일주일이 지나자 여유 시간이 생겼고, 그 시간에 자기계발을 시작했어요.",
+        "습관을 유지하다 보면 효율이 좋아진다는 걸 알아차렸어요."
+      ].join(" "),
+      en:[
+        "Lately, Mira felt she was using her phone too much.",
+        "So she decided to reduce her phone time by just 10 minutes a day.",
+        "At first it was hard, but as she kept reducing it, it became familiar.",
+        "After a week, she gained free time and started self-development during that time.",
+        "She realized that maintaining habits can improve efficiency."
+      ].join(" "),
+      gloss:[
+        ["여유 시간","free time"],
+        ["습관","habit"],
+        ["유지하다","maintain"],
+        ["자기계발","self-development"],
+        ["알아차리다","notice/realize"]
+      ],
+      qs:[
+        { q:"미라는 무엇을 줄이기로 했어요?", a:"핸드폰 사용 시간을 줄이기로 했어요." },
+        { q:"핸드폰 사용을 줄이다 보니 어떤 결과가 생겼어요?", a:"여유 시간이 생겼어요." },
+        { q:"여유 시간이 생기자 미라는 무엇을 시작했어요?", a:"자기계발을 시작했어요." }
+      ]
+    },
+    {
+      title:"목표가 확실해지는 순간",
+      ko:[
+        "민지는 목표가 많아서 늘 복잡한 느낌이었어요.",
+        "하지만 매일 5분씩 생각을 정리하기 시작했어요.",
+        "생각을 정리하다 보면 우선순위가 보이기 시작했고, 목표가 더 확실해졌어요.",
+        "불필요한 걱정에 신경을 쓰지 않으려고 실천했어요.",
+        "그 결과, 하루가 더 생산적으로 변했어요."
+      ].join(" "),
+      en:[
+        "Minji had many goals and always felt overwhelmed.",
+        "But she started organizing her thoughts for five minutes each day.",
+        "As she kept organizing, priorities became clearer and her goals became more certain.",
+        "She practiced not focusing on unnecessary worries.",
+        "As a result, her days became more productive."
+      ].join(" "),
+      gloss:[
+        ["생각을 정리하다","organize thoughts"],
+        ["우선순위","priority"],
+        ["확실하다","certain"],
+        ["실천하다","put into practice"],
+        ["생산적이다","productive"]
+      ],
+      qs:[
+        { q:"민지는 매일 무엇을 했어요?", a:"생각을 5분씩 정리했어요." },
+        { q:"생각을 정리하다 보니 무엇이 보이기 시작했어요?", a:"우선순위가 보이기 시작했어요." },
+        { q:"결과적으로 민지의 하루는 어떻게 변했어요?", a:"더 생산적으로 변했어요." }
+      ]
+    }
+  ];
+
+  let currentStory = null;
+
+  function renderStory(){
+    currentStory = pick(storyBank);
+    storyTitle.textContent = currentStory.title;
+    storyKorean.textContent = currentStory.ko;
+    storyEnglish.textContent = currentStory.en;
+
+    storyGloss.innerHTML = currentStory.gloss.map(([k,e]) => `• <b>${escapeHtml(k)}</b> — ${escapeHtml(e)}`).join("<br>");
+
+    readingQs.innerHTML = "";
+    currentStory.qs.forEach((qq, idx)=>{
+      const box = document.createElement("div");
+      box.className = "item";
+      box.innerHTML = `
+        <h4>Q${idx+1}. ${escapeHtml(qq.q)}</h4>
+        <textarea data-idx="${idx}" placeholder="한국어로 답해보세요. / Answer in Korean."></textarea>
+        <details style="margin-top:10px">
+          <summary>모범 답안 / Model answer</summary>
+          <div class="answer">${escapeHtml(qq.a)}</div>
+        </details>
+      `;
+      readingQs.appendChild(box);
+    });
+
+    readingFeedback.textContent = "";
+  }
+
+  newStoryBtn.addEventListener("click", renderStory);
+
+  toggleGlossBtn.addEventListener("click", ()=>{
+    if(glossWrap.hasAttribute("open")) glossWrap.removeAttribute("open");
+    else glossWrap.setAttribute("open","");
+  });
+
+  checkReadingBtn.addEventListener("click", ()=>{
+    if(!currentStory) return;
+    // simple check: did they answer each question at all + grammar presence in at least one answer
+    const answers = Array.from(readingQs.querySelectorAll("textarea")).map(t => t.value.trim());
+    const filled = answers.filter(a => a.length > 0).length;
+    const anyGrammar = answers.some(a => hasGrammar(a));
+    const msg = [];
+    msg.push(filled === currentStory.qs.length ? `<span class="ok">답변 ${filled}/${currentStory.qs.length} 완료</span>` : `<span class="warn">답변 ${filled}/${currentStory.qs.length} (더 써보자)</span>`);
+    msg.push(anyGrammar ? `<span class="ok">문법 사용 감지</span>` : `<span class="warn">문법(${escapeHtml(CFG.grammarTarget)})를 한 번 넣어봐</span>`);
+    readingFeedback.innerHTML = msg.join(" / ");
+  });
+
+  saveReadingWrongBtn.addEventListener("click", ()=>{
+    if(!currentStory){
+      readingFeedback.innerHTML = `<span class="warn">먼저 이야기를 불러와요. / Load a story first.</span>`;
+      return;
+    }
+    const answers = Array.from(readingQs.querySelectorAll("textarea")).map((t,i)=>`Q${i+1}: ${t.value.trim() || "(blank)"}`).join("\n");
+    addToSrs({
+      type:"reading",
+      prompt:`[Story] ${currentStory.title}`,
+      user: answers,
+      answer:"모범 답안은 각 질문 아래에서 확인 가능",
+      meta:"읽기/질문"
+    });
+    readingFeedback.innerHTML = `<span class="ok">SRS 저장 완료. / Saved to SRS.</span>`;
+  });
+
+  /*********************************************************
+   * GAMES
+   *********************************************************/
+  const gameChips = document.querySelectorAll(".chip");
+  const rapidPane = document.getElementById("game-rapid");
+  const clozePane = document.getElementById("game-cloze");
+  const memoryPane = document.getElementById("game-memory");
+
+  function showGame(key){
+    rapidPane.style.display = (key==="rapid") ? "block" : "none";
+    clozePane.style.display = (key==="cloze") ? "block" : "none";
+    memoryPane.style.display = (key==="memory") ? "block" : "none";
+    gameChips.forEach(c => c.classList.toggle("active", c.dataset.game === key));
+  }
+  gameChips.forEach(c => c.addEventListener("click", ()=> showGame(c.dataset.game)));
+
+  // Rapid
+  const rapidWordEl = document.getElementById("rapidWord");
+  const rapidWordHintEl = document.getElementById("rapidWordHint");
+  const rapidChoices = document.getElementById("rapidChoices");
+  const rapidNewBtn = document.getElementById("rapidNew");
+  const rapidSaveWrongBtn = document.getElementById("rapidSaveWrong");
+  const rapidFeedback = document.getElementById("rapidFeedback");
+  const rapidCorrectEl = document.getElementById("rapidCorrect");
+  const rapidWrongEl = document.getElementById("rapidWrong");
+
+  let rapidState = { current:null, correct:0, wrong:0 };
+
+  function newRapid(){
+    const pool = vocabMixed;
+    const correct = pick(pool);
+    const wrongs = shuffle(pool.filter(x => x[0] !== correct[0])).slice(0,3);
+    const choices = shuffle([correct, ...wrongs]);
+
+    rapidState.current = { correct, choices };
+    rapidWordEl.textContent = correct[0];
+    rapidWordHintEl.textContent = "(choose the meaning)";
+    rapidFeedback.textContent = "";
+    rapidChoices.innerHTML = "";
+
+    choices.forEach(([k,e])=>{
+      const b = document.createElement("button");
+      b.className = "btn";
+      b.textContent = e;
+      b.addEventListener("click", ()=>{
+        if(k === correct[0]){
+          rapidState.correct++;
+          rapidFeedback.innerHTML = `<span class="ok">정답!</span> ${escapeHtml(k)} = ${escapeHtml(e)}`;
+        } else {
+          rapidState.wrong++;
+          rapidFeedback.innerHTML = `<span class="bad">틀림</span> 정답: ${escapeHtml(correct[0])} = ${escapeHtml(correct[1])}`;
+          addToSrs({
+            type:"game-rapid",
+            prompt:`뜻 맞히기: ${correct[0]}`,
+            user:`picked: ${e}`,
+            answer:`${correct[1]}`,
+            meta:"게임/뜻 맞히기"
+          });
+        }
+        rapidCorrectEl.textContent = String(rapidState.correct);
+        rapidWrongEl.textContent = String(rapidState.wrong);
+      });
+      rapidChoices.appendChild(b);
+    });
+  }
+
+  rapidNewBtn.addEventListener("click", newRapid);
+  rapidSaveWrongBtn.addEventListener("click", ()=>{
+    if(!rapidState.current){
+      rapidFeedback.innerHTML = `<span class="warn">먼저 Next 눌러 시작! / Press Next to start.</span>`;
+      return;
+    }
+    const c = rapidState.current.correct;
+    addToSrs({
+      type:"game-rapid",
+      prompt:`뜻 맞히기(저장): ${c[0]}`,
+      user:"(manual save)",
+      answer:c[1],
+      meta:"게임/뜻 맞히기"
+    });
+    rapidFeedback.innerHTML = `<span class="ok">저장 완료. / Saved.</span>`;
+  });
+
+  // Cloze
+  const clozeSentence = document.getElementById("clozeSentence");
+  const clozeSentenceEN = document.getElementById("clozeSentenceEN");
+  const clozeChoices = document.getElementById("clozeChoices");
+  const clozeNewBtn = document.getElementById("clozeNew");
+  const clozeSaveWrongBtn = document.getElementById("clozeSaveWrong");
+  const clozeFeedback = document.getElementById("clozeFeedback");
+  let clozeState = { current:null };
+
+  const clozeTemplates = [
+    {
+      ko:"핸드폰 사용을 ____ 보면 여유 시간이 생겨요.",
+      en:"If you keep ____ phone use, you gain more free time.",
+      answer:"줄이다",
+      distractors:["소비하다","유지하다","분석하다"]
+    },
+    {
+      ko:"생각을 ____ 보면 스트레스가 줄어들어요.",
+      en:"If you keep ____ your thoughts, stress decreases.",
+      answer:"정리하다",
+      distractors:["등록하다","소비하다","어울리다"]
+    },
+    {
+      ko:"좋은 습관을 ____ 보면 효율이 좋아져요.",
+      en:"If you keep ____ good habits, efficiency improves.",
+      answer:"실천하다",
+      distractors:["분석하다","등록하다","소비하다"]
+    }
+  ];
+
+  function newCloze(){
+    const t = pick(clozeTemplates);
+    clozeState.current = t;
+    clozeSentence.textContent = t.ko;
+    clozeSentenceEN.textContent = t.en;
+    clozeFeedback.textContent = "";
+    clozeChoices.innerHTML = "";
+
+    const options = shuffle([t.answer, ...t.distractors].slice(0,4));
+    options.forEach(opt=>{
+      const b = document.createElement("button");
+      b.className="btn";
+      b.textContent=opt;
+      b.addEventListener("click", ()=>{
+        if(opt === t.answer){
+          clozeFeedback.innerHTML = `<span class="ok">정답!</span> ${escapeHtml(t.answer)}`;
+        }else{
+          clozeFeedback.innerHTML = `<span class="bad">틀림</span> 정답: ${escapeHtml(t.answer)}`;
+          addToSrs({
+            type:"game-cloze",
+            prompt:t.ko,
+            user:`picked: ${opt}`,
+            answer:`${t.answer}`,
+            meta:"게임/빈칸"
+          });
+        }
+      });
+      clozeChoices.appendChild(b);
+    });
+  }
+  clozeNewBtn.addEventListener("click", newCloze);
+  clozeSaveWrongBtn.addEventListener("click", ()=>{
+    if(!clozeState.current){
+      clozeFeedback.innerHTML = `<span class="warn">먼저 Next 눌러 시작! / Press Next to start.</span>`;
+      return;
+    }
+    addToSrs({
+      type:"game-cloze",
+      prompt:clozeState.current.ko,
+      user:"(manual save)",
+      answer:clozeState.current.answer,
+      meta:"게임/빈칸"
+    });
+    clozeFeedback.innerHTML = `<span class="ok">저장 완료. / Saved.</span>`;
+  });
+
+  // Memory flip
+  const memoryNewBtn = document.getElementById("memoryNew");
+  const memorySaveWrongBtn = document.getElementById("memorySaveWrong");
+  const memoryBoard = document.getElementById("memoryBoard");
+  const memoryStats = document.getElementById("memoryStats");
+
+  let mem = { first:null, lock:false, moves:0, matches:0, wrong:0, deck:[] };
+
+  function buildMemoryDeck(){
+    const pairs = shuffle(vocabMixed).slice(0,8); // 8 pairs
+    const deck = [];
+    pairs.forEach(([k,e], idx)=>{
+      deck.push({ id:`k${idx}`, pair:idx, text:k, flipped:false, matched:false });
+      deck.push({ id:`e${idx}`, pair:idx, text:e, flipped:false, matched:false });
+    });
+    return shuffle(deck);
+  }
+
+  function renderMemory(){
+    memoryBoard.innerHTML = "";
+    mem.deck.forEach(card=>{
+      const btn = document.createElement("button");
+      btn.className = "btn";
+      btn.style.height = "64px";
+      btn.style.borderRadius = "14px";
+      btn.style.textAlign = "center";
+      btn.style.fontWeight = "800";
+      btn.style.background = card.matched ? "#f0fdf4" : (card.flipped ? "#fff" : "#f1f2f7");
+      btn.style.borderColor = card.matched ? "rgba(22,163,74,.35)" : "var(--line)";
+      btn.textContent = (card.flipped || card.matched) ? card.text : "FLIP";
+      btn.disabled = card.matched;
+      btn.addEventListener("click", ()=> flipCard(card.id));
+      memoryBoard.appendChild(btn);
+    });
+    memoryStats.innerHTML = `Moves: <b>${mem.moves}</b> • Matches: <b>${mem.matches}</b> • Wrong flips: <b>${mem.wrong}</b>`;
+  }
+
+  function flipCard(id){
+    if(mem.lock) return;
+    const c = mem.deck.find(x=>x.id===id);
+    if(!c || c.flipped || c.matched) return;
+
+    c.flipped = true;
+    renderMemory();
+
+    if(!mem.first){
+      mem.first = c;
+      return;
+    }
+
+    mem.moves++;
+    if(mem.first.pair === c.pair){
+      mem.first.matched = true;
+      c.matched = true;
+      mem.matches++;
+      mem.first = null;
+      renderMemory();
+    } else {
+      mem.wrong++;
+      const first = mem.first;
+      mem.lock = true;
+      setTimeout(()=>{
+        first.flipped = false;
+        c.flipped = false;
+        mem.first = null;
+        mem.lock = false;
+        renderMemory();
+      }, 650);
+    }
+  }
+
+  function newMemory(){
+    mem = { first:null, lock:false, moves:0, matches:0, wrong:0, deck:buildMemoryDeck() };
+    renderMemory();
+  }
+
+  memoryNewBtn.addEventListener("click", newMemory);
+  memorySaveWrongBtn.addEventListener("click", ()=>{
+    addToSrs({
+      type:"game-memory",
+      prompt:"메모리 게임 결과",
+      user:`moves=${mem.moves}, wrong=${mem.wrong}, matches=${mem.matches}`,
+      answer:"(aim: fewer wrong flips next time)",
+      meta:"게임/메모리"
+    });
+    memoryStats.innerHTML += ` • <span class="ok">Saved</span>`;
+  });
+
+  /*********************************************************
+   * SRS RENDER
+   *********************************************************/
+  const srsList = document.getElementById("srsList");
+  const srsEmpty = document.getElementById("srsEmpty");
+  const refreshSrsBtn = document.getElementById("refreshSrs");
+  const clearSrsBtn = document.getElementById("clearSrs");
 
   function renderSrs(){
     const items = loadSrs();
@@ -887,7 +1683,7 @@ Answer: ${it.answer || ""}`;
   });
 
   /*********************************************************
-   * SETTINGS TAB (옵션 업데이트)
+   * SETTINGS TAB
    *********************************************************/
   const lessonLabelInput = document.getElementById("lessonLabelInput");
   const grammarInput = document.getElementById("grammarInput");
@@ -923,7 +1719,8 @@ Answer: ${it.answer || ""}`;
     CFG.grammarTarget = grammarInput.value.trim() || DEFAULT_CFG.grammarTarget;
     saveCfg(CFG);
     applyCfg();
-    renderTranslations(); // update hint lines
+    renderTranslations();
+    if(generatedCurrent) generateTranslation();
     saveGrammarBtn.textContent = "저장됨";
     setTimeout(()=>saveGrammarBtn.textContent="저장", 900);
   });
@@ -934,6 +1731,7 @@ Answer: ${it.answer || ""}`;
     applyCfg();
     syncSettingsInputs();
     renderTranslations();
+    if(generatedCurrent) generateTranslation();
   });
 
   collapseAllAnswersBtn.addEventListener("click", ()=>{
@@ -946,11 +1744,15 @@ Answer: ${it.answer || ""}`;
   resetAllBtn.addEventListener("click", ()=>{
     localStorage.removeItem(STORAGE.SRS_KEY);
     localStorage.removeItem(STORAGE.CFG_KEY);
+    localStorage.removeItem(STORAGE.PICKED_KEY);
     CFG = {...DEFAULT_CFG};
     applyCfg();
     syncSettingsInputs();
+    generatedHistory = [];
+    generatedCurrent = null;
     renderTranslations();
     renderSrs();
+    showPickedWords();
   });
 
   /*********************************************************
@@ -962,8 +1764,23 @@ Answer: ${it.answer || ""}`;
     syncSettingsInputs();
     renderVocabPreview(vocabMixed);
     renderWarmup();
+    showPickedWords();
+
+    // Translation
+    generateTranslation();
+    generatedHistory.unshift({ level:"Generated", en: genEN.textContent, ko: genModelKO.textContent });
+    generatedHistory = generatedHistory.slice(0,30);
     renderTranslations();
+
+    // Reading
+    renderStory();
+
+    // Games
+    newRapid();
+    newCloze();
+    newMemory();
   }
+
   init();
 </script>
 </body>
