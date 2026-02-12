@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Listening Quiz</title>
+  <style>
+    body{font-family:system-ui;background:#fafafa;padding:18px;margin:0;color:#111;}
+    h2{margin:0 0 12px;}
+    .card{background:#fff;border:1px solid #e8e8e8;border-radius:14px;padding:16px;margin:12px 0;}
+    button{
+      padding:10px 14px;border-radius:12px;border:1px solid #ddd;background:#fff;
+      margin:6px 6px 0 0; cursor:pointer;
+    }
+    button.primary{border-color:#111;}
+    .choices{display:grid;gap:10px;margin-top:10px;}
+    .choice{
+      text-align:left; padding:12px 14px; border:1px solid #ddd; border-radius:14px; background:#fff; cursor:pointer;
+    }
+    .choice:active{transform:scale(.99);}
+    .status{background:#f3f3f3;padding:10px 12px;border-radius:12px;margin-top:10px;}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+    .small{color:#666;font-size:12px;line-height:1.35;margin-top:8px;}
+    select{padding:10px 12px;border-radius:12px;border:1px solid #ddd;background:#fff;}
+  </style>
+</head>
+<body>
+  <h2>Listening Quiz</h2>
+
+  <div class="card">
+    <div class="row">
+      <button class="primary" id="startBtn">Start / Enable Audio</button>
+      <button id="playBtn" disabled>Play</button>
+      <button id="replayBtn" disabled>Replay</button>
+      <button id="nextBtn" disabled>Next</button>
+    </div>
+
+    <div class="small">
+      iPhone tip: you must tap <b>Start / Enable Audio</b> first or Safari won’t speak.
+      If it’s silent, tap Start again and then Play.
+    </div>
+
+    <div class="status" id="status">Tap “Start / Enable Audio” to begin.</div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <div><b>Score:</b> <span id="score">0</span></div>
+      <div><b>Streak:</b> <span id="streak">0</span></div>
+      <div><b>Question:</b> <span id="qnum">0</span>/<span id="qtotal">0</span></div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <b>Voice (optional):</b>
+      <div class="row" style="margin-top:8px;">
+        <select id="voiceSelect">
+          <option value="">Auto</option>
+        </select>
+      </div>
+      <div class="small">Pick a Korean voice if you see one (often named “Korean”, “ko-KR”, or similar).</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <b>Choose the meaning:</b>
+    <div class="choices" id="choices"></div>
+  </div>
+
+<script>
+  // Edit/add your items here:
+  // text = what gets spoken (Korean)
+  // answer = correct English meaning
+  const ITEMS = [
+    { text: "습관", answer: "habit" },
+    { text: "생산적이다", answer: "to be productive" },
+    { text: "자기계발", answer: "self-development" },
+    { text: "도착하자마자", answer: "as soon as arriving" },
+    { text: "확실하다", answer: "to be certain" },
+    { text: "열정", answer: "passion" },
+    { text: "스트레스", answer: "stress" },
+    { text: "정리하다", answer: "to organize / tidy up" },
+    { text: "등록하다", answer: "to register / sign up" },
+    { text: "길이 미끄러워요", answer: "The road is slippery." },
+  ];
+
+  // --------- state ----------
+  let idx = 0;
+  let score = 0;
+  let streak = 0;
+  let enabled = false;
+  let voices = [];
+  let currentChoices = [];
+  let locked = false;
+
+  const statusEl = document.getElementById("status");
+  const scoreEl = document.getElementById("score");
+  const streakEl = document.getElementById("streak");
+  const qnumEl = document.getElementById("qnum");
+  const qtotalEl = document.getElementById("qtotal");
+  const choicesEl = document.getElementById("choices");
+  const voiceSelect = document.getElementById("voiceSelect");
+
+  const startBtn = document.getElementById("startBtn");
+  const playBtn = document.getElementById("playBtn");
+  const replayBtn = document.getElementById("replayBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
+  qtotalEl.textContent = ITEMS.length;
+
+  function setStatus(msg){ statusEl.textContent = msg; }
+  function updateHUD(){
+    scoreEl.textContent = String(score);
+    streakEl.textContent = String(streak);
+    qnumEl.textContent = String(idx + 1);
+  }
+
+  function shuffle(a){
+    const arr = a.slice();
+    for(let i=arr.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [arr[i],arr[j]] = [arr[j],arr[i]];
+    }
+    return arr;
+  }
+
+  function getVoice(){
+    const selected = voiceSelect.value;
+    if(selected){
+      const v = voices.find(v => v.name === selected);
+      if(v) return v;
+    }
+    // Auto: prefer ko-KR if available
+    const ko = voices.find(v => (v.lang || "").toLowerCase().startsWith("ko"));
+    return ko || voices[0] || null;
+  }
+
+  function speak(text){
+    if(!("speechSynthesis" in window)){
+      setStatus("Your browser doesn’t support speech on this device.");
+      return;
+    }
+    window.speechSynthesis.cancel();
+
+    const u = new SpeechSynthesisUtterance(text);
+    const v = getVoice();
+    if(v) u.voice = v;
+
+    // Helpful defaults
+    u.rate = 1.0;
+    u.pitch = 1.0;
+
+    window.speechSynthesis.speak(u);
+  }
+
+  function loadVoices(){
+    voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+    // Populate dropdown once
+    const existing = new Set([...voiceSelect.options].map(o => o.value));
+    voices.forEach(v=>{
+      if(existing.has(v.name)) return;
+      const opt = document.createElement("option");
+      opt.value = v.name;
+      opt.textContent = `${v.name} (${v.lang})`;
+      voiceSelect.appendChild(opt);
+    });
+  }
+
+  function makeChoices(){
+    const correct = ITEMS[idx].answer;
+
+    // pick 3 wrong answers
+    const allAnswers = ITEMS.map(x=>x.answer);
+    const wrongPool = allAnswers.filter(a => a !== correct);
+    const wrongs = shuffle(wrongPool).slice(0, 3);
+
+    currentChoices = shuffle([correct, ...wrongs]);
+    choicesEl.innerHTML = "";
+
+    currentChoices.forEach(choice=>{
+      const btn = document.createElement("button");
+      btn.className = "choice";
+      btn.textContent = choice;
+      btn.onclick = ()=> pick(choice, btn);
+      choicesEl.appendChild(btn);
+    });
+  }
+
+  function loadQuestion(){
+    locked = false;
+    makeChoices();
+    updateHUD();
+    setStatus("Press Play, then choose the meaning.");
+    playBtn.disabled = false;
+    replayBtn.disabled = true;
+    nextBtn.disabled = true;
+  }
+
+  function pick(choice, btn){
+    if(locked) return;
+    locked = true;
+
+    const correct = ITEMS[idx].answer;
+    const buttons = [...choicesEl.querySelectorAll("button")];
+
+    if(choice === correct){
+      score += 1;
+      streak += 1;
+      setStatus("Correct.");
+      btn.style.borderColor = "#111";
+      replayBtn.disabled = false;
+      nextBtn.disabled = false;
+    } else {
+      streak = 0;
+      setStatus(`Not quite. Correct answer: ${correct}`);
+      btn.style.borderColor = "#111";
+      // highlight correct
+      const correctBtn = buttons.find(b => b.textContent === correct);
+      if(correctBtn) correctBtn.style.borderColor = "#111";
+      replayBtn.disabled = false;
+      nextBtn.disabled = false;
+    }
+    updateHUD();
+  }
+
+  startBtn.onclick = ()=>{
+    enabled = true;
+    // iOS Safari often needs a user gesture before voices populate
+    loadVoices();
+    setStatus("Audio enabled. Press Play.");
+    playBtn.disabled = false;
+  };
+
+  playBtn.onclick = ()=>{
+    if(!enabled){
+      setStatus("Tap Start / Enable Audio first.");
+      return;
+    }
+    speak(ITEMS[idx].text);
+    replayBtn.disabled = false;
+    setStatus("Listening… choose the meaning.");
+  };
+
+  replayBtn.onclick = ()=>{
+    if(!enabled) return;
+    speak(ITEMS[idx].text);
+  };
+
+  nextBtn.onclick = ()=>{
+    idx = (idx + 1) % ITEMS.length;
+    loadQuestion();
+  };
+
+  // Some browsers load voices asynchronously
+  if("speechSynthesis" in window){
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+    loadVoices();
+  }
+
+  // init
+  loadQuestion();
+</script>
+</body>
+</html>
