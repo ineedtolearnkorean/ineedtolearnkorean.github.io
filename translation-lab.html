@@ -1,0 +1,573 @@
+<!--
+FILE NAME: translation-lab.html
+Open at: https://ineedtolearnkorean.github.io/translation-lab.html
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Korean Fluency Lab — Translation</title>
+
+<style>
+  body{font-family:Arial;background:#f4f6ff;text-align:center;padding:30px;}
+  button{padding:10px 18px;margin:6px;border:none;border-radius:10px;background:#6f82ff;color:white;font-size:15px;cursor:pointer;}
+  button.secondary{background:#8a8fa8;}
+  .card{background:white;padding:25px;border-radius:18px;width:92%;max-width:980px;margin:auto;margin-top:20px;}
+  .wordbank span{background:#eef1ff;padding:8px 12px;margin:6px;border-radius:10px;display:inline-block;}
+  input{padding:12px;width:86%;max-width:820px;margin-top:15px;}
+  .correct{color:green;} .wrong{color:red;}
+  .small{opacity:.85;font-size:13px;line-height:1.4;}
+  .row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:10px;}
+  .pill{background:#f2f2ff;border:1px solid #e2e2ff;border-radius:999px;padding:6px 10px;font-size:13px;}
+</style>
+</head>
+
+<body>
+
+<h1>🇰🇷 Korean Fluency Lab</h1>
+
+<div class="row">
+  <button id="btnTranslation">✍️ Translation</button>
+  <button id="btnGrammar">📘 Grammar</button>
+  <button id="btnConj">✏️ Conjugation</button>
+  <button id="btnIrregular">🔥 Irregulars</button>
+</div>
+
+<div id="app" class="card"></div>
+
+<script>
+/* ==========================
+   UTIL
+========================== */
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    const t=a[i]; a[i]=a[j]; a[j]=t;
+  }
+  return a;
+}
+function setApp(html){ document.getElementById("app").innerHTML = html; }
+function norm(x){ return String(x||"").replace(/\s+/g," ").trim(); }
+
+/* ==========================
+   GLOBAL CURRENT STATE
+========================== */
+let CURRENT_HINT = "";
+let CURRENT_ANSWER = "";
+let CURRENT_NOTE = "";
+let CURRENT_IRREGULAR_TRUTH = null;
+
+/* ==========================
+   VOCAB (yours + drama)
+========================== */
+const vocab = {
+  subjects: [
+    {en:"I", kr:"저는"},
+    {en:"My friend", kr:"친구는"},
+    {en:"That person", kr:"그 사람은"},
+    {en:"We", kr:"우리는"}
+  ],
+  objects: [
+    {en:"the Instagram photo", kr:"인스타 사진을"},
+    {en:"the post", kr:"게시물을"},
+    {en:"the message", kr:"메시지를"},
+    {en:"Korean", kr:"한국어를"}
+  ],
+  verbsBase: [
+    {en:"study", krPast:"공부했어요"},
+    {en:"delete", krPast:"지웠어요"},
+    {en:"hear", krPast:"들었어요"},
+    {en:"learn", krPast:"배웠어요"},
+    {en:"send", krPast:"보냈어요"}
+  ],
+  distractorsKR: [
+    "오해","의미","통역","날짜","게시되다","변하다","달라지다","체감","의식 불명","상태"
+  ]
+};
+
+const connectors = [
+  { en:"Even though I was tired,", kr:"피곤했지만" },
+  { en:"Because I was studying,", kr:"공부하느라" },
+  { en:"While listening to music,", kr:"음악을 들으면서" },
+  { en:"After studying,", kr:"공부한 후에" }
+];
+
+function verbToGeDoeda(V){
+  const map = {
+    "study":"공부하게 됐어요",
+    "delete":"지우게 됐어요",
+    "hear":"듣게 됐어요",
+    "learn":"배우게 됐어요",
+    "send":"보내게 됐어요"
+  };
+  return map[V.en] || "하게 됐어요";
+}
+function verbToUlPpeon(V){
+  const map = {
+    "study":"공부할 뻔했어요",
+    "delete":"지울 뻔했어요",
+    "hear":"들을 뻔했어요",
+    "learn":"배울 뻔했어요",
+    "send":"보낼 뻔했어요"
+  };
+  return map[V.en] || "할 뻔했어요";
+}
+function verbToSulBakkae(V){
+  const map = {
+    "study":"공부할 수밖에 없었어요",
+    "delete":"지울 수밖에 없었어요",
+    "hear":"들을 수밖에 없었어요",
+    "learn":"배울 수밖에 없었어요",
+    "send":"보낼 수밖에 없었어요"
+  };
+  return map[V.en] || "할 수밖에 없었어요";
+}
+
+/* ==========================
+   PATTERNS (mostly B2)
+========================== */
+const patterns = [
+  {
+    hint:"~게 되다 = ended up / came to",
+    build: ({S,O,V}) => ({
+      en: `${S.en} ended up ${V.en}ing ${O.en}.`,
+      kr: `${S.kr} ${O.kr} ${verbToGeDoeda(V)}`
+    })
+  },
+  {
+    hint:"~(으)ㄹ 뻔했다 = almost did",
+    build: ({S,O,V}) => ({
+      en: `${S.en} almost ${V.en}ed ${O.en}.`,
+      kr: `${S.kr} ${O.kr} ${verbToUlPpeon(V)}`
+    })
+  },
+  {
+    hint:"~(으)ㄹ 수밖에 없다 = have no choice but to",
+    build: ({S,O,V}) => ({
+      en: `${S.en} had no choice but to ${V.en} ${O.en}.`,
+      kr: `${S.kr} ${O.kr} ${verbToSulBakkae(V)}`
+    })
+  },
+  {
+    hint:"~(으)ㄹ 텐데 = would probably / I assume",
+    build: () => ({
+      en: `That would probably cause a misunderstanding.`,
+      kr: `그건 오해가 생길 텐데요`
+    })
+  },
+  {
+    hint:"~았/었어야 했다 = should have done",
+    build: () => ({
+      en: `I should have listened.`,
+      kr: `들었어야 했어요`
+    })
+  },
+  {
+    hint:"~(ㄴ/는)다는 것 = the fact that…",
+    build: () => ({
+      en: `I heard that many things changed.`,
+      kr: `많은 게 변했다는 것을 들었어요`
+    })
+  },
+  {
+    hint:"~달라고 하다 = ask someone to do something",
+    build: () => ({
+      en: `I asked the interpreter to delete the photo.`,
+      kr: `통역에게 사진을 지워 달라고 했어요`
+    })
+  },
+  {
+    hint:"~느라 + ~수밖에 없다",
+    build: () => ({
+      en: `Because I was studying, I had no choice but to stay home.`,
+      kr: `공부하느라 집에 있을 수밖에 없었어요`
+    })
+  },
+  {
+    hint:"~지만 = even though / but",
+    build: () => ({
+      en: `Even though I was tired, I studied.`,
+      kr: `피곤했지만 공부했어요`
+    })
+  },
+  {
+    hint:"~는 것 같다 = it seems / I guess",
+    build: () => ({
+      en: `It seems like a misunderstanding happened.`,
+      kr: `오해가 생긴 것 같아요`
+    })
+  }
+];
+
+/* ==========================
+   TRANSLATION MODE
+========================== */
+function renderTranslation(){
+  setApp(`
+    <h2>Translate to Korean:</h2>
+    <p><b id="enSentence"></b></p>
+
+    <div class="row">
+      <span class="pill">Type the full sentence</span>
+      <span class="pill">Word bank includes distractors</span>
+      <span class="pill">Mostly B2</span>
+    </div>
+
+    <div class="row" style="margin-top:14px;">
+      <button id="btnHint">Show Grammar Hint</button>
+      <button class="secondary" id="btnReveal">Reveal Answer</button>
+      <button class="secondary" id="btnNew">New Sentence</button>
+    </div>
+
+    <h3>Word Bank</h3>
+    <div class="wordbank" id="wordbank"></div>
+
+    <input id="userAnswer" placeholder="Type Korean here…" />
+    <br><br>
+    <button id="btnCheck">Check</button>
+
+    <p id="hint" class="small"></p>
+    <p id="feedback"></p>
+    <p id="solution" class="small"></p>
+  `);
+
+  // hook buttons
+  document.getElementById("btnHint").onclick = () => {
+    document.getElementById("hint").innerHTML = `<b>Hint:</b> ${CURRENT_HINT}`;
+  };
+  document.getElementById("btnReveal").onclick = () => {
+    document.getElementById("solution").innerHTML = `<b>Model answer:</b> ${CURRENT_ANSWER}`;
+  };
+  document.getElementById("btnNew").onclick = generateExercise;
+  document.getElementById("btnCheck").onclick = () => {
+    const user = norm(document.getElementById("userAnswer").value);
+    const ans = norm(CURRENT_ANSWER);
+    const fb = document.getElementById("feedback");
+    const sol = document.getElementById("solution");
+
+    if(user === ans){
+      fb.innerHTML = `<span class="correct">Perfect!! 🎉</span>`;
+      sol.innerHTML = "";
+    }else{
+      fb.innerHTML = `<span class="wrong">Not quite — tweak particles/endings 💪</span>`;
+      sol.innerHTML = `<b>Model answer:</b> ${CURRENT_ANSWER}`;
+    }
+  };
+}
+
+function generateExercise(){
+  const useConnector = Math.random() < 0.7;
+  const C = useConnector ? pick(connectors) : null;
+
+  const S = pick(vocab.subjects);
+  const O = pick(vocab.objects);
+  const V = pick(vocab.verbsBase);
+  const P = pick(patterns);
+
+  const built = P.build({S,O,V});
+  let en = built.en;
+  let kr = built.kr;
+
+  if(C){
+    const safeToPrepend =
+      !kr.startsWith("그건") &&
+      !kr.startsWith("많은") &&
+      !kr.startsWith("통역") &&
+      !kr.startsWith("공부하느라") &&
+      !kr.startsWith("피곤했지만") &&
+      !kr.startsWith("오해");
+
+    if(safeToPrepend){
+      en = `${C.en} ${en}`;
+      kr = `${C.kr} ${kr}`;
+    }
+  }
+
+  CURRENT_HINT = P.hint;
+  CURRENT_ANSWER = kr;
+
+  // word bank + distractors
+  const baseWords = kr.split(" ").filter(Boolean);
+  const distractors = shuffle(vocab.distractorsKR).slice(0, Math.random()<0.5 ? 2 : 1);
+  const bank = shuffle(baseWords.concat(distractors));
+
+  // ensure UI exists (first run)
+  renderTranslation();
+
+  document.getElementById("enSentence").textContent = en;
+  document.getElementById("wordbank").innerHTML = bank.map(w=>`<span>${w}</span>`).join("");
+  document.getElementById("hint").innerHTML = "";
+  document.getElementById("feedback").innerHTML = "";
+  document.getElementById("solution").innerHTML = "";
+  document.getElementById("userAnswer").value = "";
+}
+
+/* ==========================
+   GRAMMAR MODE
+========================== */
+const grammarLessons = [
+  {
+    title:"~(ㄴ/는)다는 것 / ~다는 것",
+    explain:"Turns a sentence into a noun phrase: “the fact that…”.\n- Verb present: ㄴ/는다는 것\n- Adj: 다는 것\n- Past: 았/었다는 것",
+    examples:["많은 게 변했다는 것을 들었어요.","비가 온다는 소식이 있어요."]
+  },
+  {
+    title:"~달라고 하다",
+    explain:"Reported request: asked someone to do something.",
+    examples:["사진을 지워 달라고 했어요.","조금만 기다려 달라고 했어요."]
+  },
+  {
+    title:"~(으)ㄹ 텐데",
+    explain:"Assumption/expectation: would probably…",
+    examples:["그건 오해가 생길 텐데요.","지금 가면 늦을 텐데…"]
+  },
+  {
+    title:"~느라",
+    explain:"Busy doing X → negative result.",
+    examples:["공부하느라 잠을 못 잤어요.","일하느라 연락을 못 했어요."]
+  },
+  {
+    title:"~(으)ㄹ 수밖에 없다",
+    explain:"No choice but to.",
+    examples:["기다릴 수밖에 없어요.","오늘은 집에 있을 수밖에 없었어요."]
+  },
+  {
+    title:"~(으)ㄹ 뻔했다",
+    explain:"Almost did (but didn’t).",
+    examples:["게시물을 지울 뻔했어요.","메시지를 잘못 보낼 뻔했어요."]
+  },
+  {
+    title:"~았/었어야 했다",
+    explain:"Regret: should have done.",
+    examples:["더 일찍 공부했어야 했어요.","들었어야 했어요."]
+  }
+];
+
+function grammarLesson(){
+  const L = pick(grammarLessons);
+  setApp(`
+    <h2>${L.title}</h2>
+    <p class="small" style="white-space:pre-line;">${L.explain}</p>
+    <h3>Examples</h3>
+    ${L.examples.map(e=>`<p><b>${e}</b></p>`).join("")}
+    <div class="row" style="margin-top:14px;">
+      <button id="backToTrans">Go to Translation</button>
+      <button class="secondary" id="anotherLesson">Another Lesson</button>
+    </div>
+  `);
+  document.getElementById("backToTrans").onclick = generateExercise;
+  document.getElementById("anotherLesson").onclick = grammarLesson;
+}
+
+/* ==========================
+   CONJUGATION MODE (B2 targets)
+========================== */
+const conjPrompts = [
+  { label:"polite present (해요체)", fn:"present" },
+  { label:"polite past (했어요)", fn:"past" },
+  { label:"future (할 거예요)", fn:"future" },
+  { label:"regret (했어야 했어요)", fn:"regret" },
+  { label:"assumption (할 텐데요)", fn:"assume" },
+  { label:"almost (할 뻔했어요)", fn:"almost" }
+];
+
+const conjMap = {
+  // present
+  "듣다": {present:"들어요", past:"들었어요", future:"들을 거예요", regret:"들었어야 했어요", assume:"들을 텐데요", almost:"들을 뻔했어요"},
+  "걷다": {present:"걸어요", past:"걸었어요", future:"걸을 거예요", regret:"걸었어야 했어요", assume:"걸을 텐데요", almost:"걸을 뻔했어요"},
+  "돕다": {present:"도와요", past:"도왔어요", future:"도울 거예요", regret:"도왔어야 했어요", assume:"도울 텐데요", almost:"도울 뻔했어요"},
+  "어렵다": {present:"어려워요", past:"어려웠어요", future:"어려울 거예요", regret:"어려웠어야 했어요", assume:"어려울 텐데요", almost:"어려울 뻔했어요"},
+  "모르다": {present:"몰라요", past:"몰랐어요", future:"모를 거예요", regret:"몰랐어야 했어요", assume:"모를 텐데요", almost:"모를 뻔했어요"},
+  "다르다": {present:"달라요", past:"달랐어요", future:"다를 거예요", regret:"달랐어야 했어요", assume:"다를 텐데요", almost:"다를 뻔했어요"},
+  "쓰다": {present:"써요", past:"썼어요", future:"쓸 거예요", regret:"썼어야 했어요", assume:"쓸 텐데요", almost:"쓸 뻔했어요"},
+  "바쁘다": {present:"바빠요", past:"바빴어요", future:"바쁠 거예요", regret:"바빴어야 했어요", assume:"바쁠 텐데요", almost:"바쁠 뻔했어요"},
+  "만들다": {present:"만들어요", past:"만들었어요", future:"만들 거예요", regret:"만들었어야 했어요", assume:"만들 텐데요", almost:"만들 뻔했어요"},
+  "살다": {present:"살아요", past:"살았어요", future:"살 거예요", regret:"살았어야 했어요", assume:"살 텐데요", almost:"살 뻔했어요"},
+  "그렇다": {present:"그래요", past:"그랬어요", future:"그럴 거예요", regret:"그랬어야 했어요", assume:"그럴 텐데요", almost:"그럴 뻔했어요"},
+  "파랗다": {present:"파래요", past:"파랬어요", future:"파랄 거예요", regret:"파랬어야 했어요", assume:"파랄 텐데요", almost:"파랄 뻔했어요"}
+};
+
+const conjVerbs = Object.keys(conjMap);
+
+function conjugation(){
+  const v = pick(conjVerbs);
+  const t = pick(conjPrompts);
+  CURRENT_ANSWER = conjMap[v][t.fn];
+
+  setApp(`
+    <h2>Conjugation Practice (B2)</h2>
+    <p><b>Verb:</b> ${v}</p>
+    <p><b>Target:</b> ${t.label}</p>
+
+    <input id="userAnswer" placeholder="Type the conjugated form…" />
+    <br><br>
+    <button id="btnCheck">Check</button>
+    <button class="secondary" id="btnReveal">Reveal</button>
+
+    <p id="feedback"></p>
+    <p id="solution" class="small"></p>
+
+    <div class="row" style="margin-top:14px;">
+      <button id="btnNext">Next</button>
+      <button class="secondary" id="btnBack">Back to Translation</button>
+    </div>
+  `);
+
+  document.getElementById("btnCheck").onclick = () => {
+    const user = norm(document.getElementById("userAnswer").value);
+    const ans = norm(CURRENT_ANSWER);
+    const fb = document.getElementById("feedback");
+    const sol = document.getElementById("solution");
+
+    if(user === ans){
+      fb.innerHTML = `<span class="correct">Correct 🔥</span>`;
+      sol.innerHTML = "";
+    }else{
+      fb.innerHTML = `<span class="wrong">Not yet — check the irregular + ending 💪</span>`;
+      sol.innerHTML = `<b>Model:</b> ${CURRENT_ANSWER}`;
+    }
+  };
+
+  document.getElementById("btnReveal").onclick = () => {
+    document.getElementById("solution").innerHTML = `<b>Model:</b> ${CURRENT_ANSWER}`;
+  };
+  document.getElementById("btnNext").onclick = conjugation;
+  document.getElementById("btnBack").onclick = generateExercise;
+}
+
+/* ==========================
+   IRREGULAR MODE (trap + target)
+========================== */
+const irregularQuiz = [
+  {base:"듣다", irregular:true, note:"ㄷ→ㄹ before vowel"},
+  {base:"걷다", irregular:true, note:"ㄷ→ㄹ before vowel"},
+  {base:"묻다(ask)", irregular:true, note:"묻다(ask) is ㄷ irregular"},
+  {base:"닫다", irregular:false, note:"닫다 is regular (trap)"},
+  {base:"받다", irregular:false, note:"받다 is regular (trap)"},
+  {base:"돕다", irregular:true, note:"ㅂ→오/우"},
+  {base:"어렵다", irregular:true, note:"ㅂ→오/우"},
+  {base:"잡다", irregular:false, note:"잡다 is regular (trap)"},
+  {base:"입다", irregular:false, note:"입다 is regular (trap)"},
+  {base:"모르다", irregular:true, note:"르→ㄹㄹ + 아/어"},
+  {base:"다르다", irregular:true, note:"르→ㄹㄹ + 아/어"},
+  {base:"쓰다", irregular:true, note:"ㅡ drop"},
+  {base:"바쁘다", irregular:true, note:"ㅡ drop"},
+  {base:"만들다", irregular:true, note:"ㄹ drops before ㄴ/ㅂ/ㅅ"},
+  {base:"살다", irregular:true, note:"ㄹ drops before ㄴ/ㅂ/ㅅ"},
+  {base:"그렇다", irregular:true, note:"ㅎ irregular"},
+  {base:"파랗다", irregular:true, note:"ㅎ irregular"}
+];
+
+const targetFns = [
+  {label:"polite present", fn:"present"},
+  {label:"polite past", fn:"past"},
+  {label:"future", fn:"future"},
+  {label:"assumption (텐데요)", fn:"assume"},
+  {label:"regret (어야 했다)", fn:"regret"},
+  {label:"almost (뻔했다)", fn:"almost"}
+];
+
+const regularExtras = {
+  "묻다": {present:"물어요", past:"물었어요", future:"물을 거예요", assume:"물을 텐데요", regret:"물었어야 했어요", almost:"물을 뻔했어요"},
+  "닫다": {present:"닫아요", past:"닫았어요", future:"닫을 거예요", assume:"닫을 텐데요", regret:"닫았어야 했어요", almost:"닫을 뻔했어요"},
+  "받다": {present:"받아요", past:"받았어요", future:"받을 거예요", assume:"받을 텐데요", regret:"받았어야 했어요", almost:"받을 뻔했어요"},
+  "잡다": {present:"잡아요", past:"잡았어요", future:"잡을 거예요", assume:"잡을 텐데요", regret:"잡았어야 했어요", almost:"잡을 뻔했어요"},
+  "입다": {present:"입어요", past:"입었어요", future:"입을 거예요", assume:"입을 텐데요", regret:"입었어야 했어요", almost:"입을 뻔했어요"}
+};
+
+function irregular(){
+  const Q = pick(irregularQuiz);
+  const T = pick(targetFns);
+
+  CURRENT_NOTE = Q.note;
+  CURRENT_IRREGULAR_TRUTH = Q.irregular;
+
+  let base = Q.base;
+  if(base.indexOf("(") !== -1) base = base.split("(")[0]; // 묻다(ask) -> 묻다
+
+  if(conjMap[base]){
+    CURRENT_ANSWER = conjMap[base][T.fn];
+  }else if(regularExtras[base]){
+    CURRENT_ANSWER = regularExtras[base][T.fn];
+  }else{
+    CURRENT_ANSWER = "(not configured)";
+  }
+
+  setApp(`
+    <h2>Irregulars (B2)</h2>
+    <p><b>Verb:</b> ${Q.base}</p>
+
+    <h3>Step 1) Is it irregular?</h3>
+    <div class="row">
+      <button id="btnIr">Irregular</button>
+      <button id="btnReg">Regular</button>
+    </div>
+    <p id="irFeedback" class="small"></p>
+
+    <h3 style="margin-top:18px;">Step 2) Conjugate</h3>
+    <p><b>Target:</b> ${T.label}</p>
+
+    <input id="userAnswer" placeholder="Type the conjugated form…" />
+    <br><br>
+    <button id="btnCheck">Check</button>
+    <button class="secondary" id="btnReveal">Reveal</button>
+
+    <p id="feedback"></p>
+    <p id="solution" class="small"></p>
+
+    <div class="row" style="margin-top:14px;">
+      <button id="btnNext">Next</button>
+      <button class="secondary" id="btnBack">Back to Translation</button>
+    </div>
+  `);
+
+  document.getElementById("btnIr").onclick = () => pickIr(true);
+  document.getElementById("btnReg").onclick = () => pickIr(false);
+
+  document.getElementById("btnCheck").onclick = () => {
+    const user = norm(document.getElementById("userAnswer").value);
+    const ans = norm(CURRENT_ANSWER);
+    const fb = document.getElementById("feedback");
+    const sol = document.getElementById("solution");
+    if(user === ans){
+      fb.innerHTML = `<span class="correct">Correct 🔥</span>`;
+      sol.innerHTML = "";
+    }else{
+      fb.innerHTML = `<span class="wrong">Not yet 💪</span>`;
+      sol.innerHTML = `<b>Model:</b> ${CURRENT_ANSWER}`;
+    }
+  };
+  document.getElementById("btnReveal").onclick = () => {
+    document.getElementById("solution").innerHTML = `<b>Model:</b> ${CURRENT_ANSWER}`;
+  };
+  document.getElementById("btnNext").onclick = irregular;
+  document.getElementById("btnBack").onclick = generateExercise;
+}
+
+function pickIr(userSaysIrregular){
+  const el = document.getElementById("irFeedback");
+  if(!el) return;
+  if(Boolean(userSaysIrregular) === Boolean(CURRENT_IRREGULAR_TRUTH)){
+    el.innerHTML = `<span class="correct">Correct.</span> <b>Why:</b> ${CURRENT_NOTE}`;
+  }else{
+    el.innerHTML = `<span class="wrong">Not quite.</span> <b>Note:</b> ${CURRENT_NOTE}`;
+  }
+}
+
+/* ==========================
+   NAV BUTTONS
+========================== */
+document.getElementById("btnTranslation").onclick = generateExercise;
+document.getElementById("btnGrammar").onclick = grammarLesson;
+document.getElementById("btnConj").onclick = conjugation;
+document.getElementById("btnIrregular").onclick = irregular;
+
+// Default
+generateExercise();
+</script>
+
+</body>
+</html>
